@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
+ using System.Runtime;
+ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using Spire.Pdf;
@@ -29,34 +30,19 @@ namespace SturmProjekt.BL
                 return null;
         }
 
-        public BitmapImage GetBitMapFromPicture(string filepath)
+        public List<Bitmap> GetBitMapFromPDF(PdfDocument pdf)
         {
-            if (File.Exists(filepath))
+          List<Bitmap> images = new List<Bitmap>();
+            int pagecount = pdf.Pages.Count;
+
+            for (var i = 0; i < pagecount; i++)
             {
-                BitmapImage bitmapImage;
-                using (Stream bmpStream = System.IO.File.Open(filepath, System.IO.FileMode.Open))
-                {
-                    bitmapImage = ImageFromStream(bmpStream);
-                }
-
-                return bitmapImage;
+                Image bmp = pdf.SaveAsImage(i);
+                var bitmap = new Bitmap(bmp);
+                images.Add(bitmap);
             }
-            else return null;
-        }
-
-        public BitmapImage ImageFromStream(Stream bmpStream)
-        {
-            var image = new BitmapImage();
-            image.BeginInit();
-            image.StreamSource = bmpStream;
-            image.EndInit();
-            return image;
-        }
-
-      /*  public List<BitmapImage> GetBitMapFromPDF(PdfDocument pdf)
-        {
-            
-        } */
+            return images;
+        } 
 
         public string GetFileNameFromFilePath(string filepath)
         {

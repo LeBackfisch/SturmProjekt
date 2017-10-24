@@ -67,12 +67,13 @@ namespace SturmProjekt.ViewModels
 
         private bool CanDelete()
         {
-            return _currentPage == null;
+            return CurrentPage != null && PictureCount > 0;
         }
 
         private void Delete()
         {
-           // PictureModels = PictureModels.Remove();
+            _eventAggregator.GetEvent<RemovePictureEvent>().Publish(CurrentPage);
+            CurrentPage = null;
         }
 
         public List<PictureModel> PictureModels
@@ -81,8 +82,7 @@ namespace SturmProjekt.ViewModels
             set
             {
                 SetProperty(ref _pictureModels, value);
-                PictureCount = _pictureModels.Count;
-                _eventAggregator.GetEvent<AddedPageEvent>().Publish(_pictureModels);
+                
             }
         }
 
@@ -105,24 +105,44 @@ namespace SturmProjekt.ViewModels
         {
             var open = new OpenFileDialog
             {
-                Filter = "Image files (*.png;*.jpeg;*.jpg)|*.png;*.jpeg;*.jpg |PDFs (*.pdf)|*.pdf"
+                Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png |PDFs (*.pdf)|*.pdf"
             };
             if (open.ShowDialog() == true)
             {
                 var picture = new PictureModel();
+                var pictures = new List<PictureModel>();
                 picture.FileName = open.FileName;
                 if (_bl.IsPdf(picture.FileName))
                 {
-                    
+                    var document = _bl.GetPdfDocument(picture.FileName);
+                    var bitmaps = _bl.GetBitMapFromPDF(document);
+
+                    foreach (var bitmap in bitmaps)
+                    {
+                        var pic = new PictureModel
+                        {
+                            FileName = picture.FileName,
+                            Page = bitmap,
+                            PageImage = _bl.BitmapToImageSource(bitmap)
+                        };
+                        pictures.Add(pic);
+                    }
+
+                    PictureModels.AddRange(pictures);
+
                 }
                 else
                 {
                    picture.Page = _bl.ConvertImageToBitmap(picture.FileName);
                     picture.PageImage = _bl.BitmapToImageSource(picture.Page);
+                    PictureModels.Add(picture);
                 }
 
-                PictureModels.Add(picture);
                 
+                PictureCount = PictureModels.Count;
+                if (_pictureModels.Count > 0)
+                        _eventAggregator.GetEvent<AddedPageEvent>().Publish(_pictureModels.Last());
+                _eventAggregator.GetEvent<PageListEvent>().Publish(_pictureModels);
             }
         }
 

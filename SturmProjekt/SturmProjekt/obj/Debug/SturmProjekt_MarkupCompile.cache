@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\Users\Sebastian\source\repos\SturmProjekt\SturmProjekt\obj\Debug\
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\
 SturmProjekt
 none
 false
 DEBUG;TRACE
-C:\Users\Sebastian\source\repos\SturmProjekt\SturmProjekt\App.xaml
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\App.xaml
 7-1289620648
 
-22104043289
-78-1294823791
+241580956083
+78-307059018
 Views\AddRechnungView.xaml;Views\ChooseProfileView.xaml;Views\ConfirmView.xaml;Views\MainWindow.xaml;Views\AddProfileView.xaml;Views\PageListView.xaml;Views\ProfileView.xaml;
 
 False

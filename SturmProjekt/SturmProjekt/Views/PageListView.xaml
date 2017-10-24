@@ -23,7 +23,7 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
-                        <Image Source="{Binding FileName, IsAsync=True}"
+                        <Image Source="{Binding PageImage, IsAsync=True}"
                              
                                MaxWidth="200"></Image>
                     </StackPanel>

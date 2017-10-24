@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Prism.Events;
 using Prism.Mvvm;
 using SturmProjekt.BL;
@@ -23,9 +24,25 @@ namespace SturmProjekt.ViewModels
         {
             _bl = bl;
             _eventAggregator = eventAggregator;
-            _eventAggregator.GetEvent<AddedPageEvent>().Subscribe(pagelist =>
+            _eventAggregator.GetEvent<PageListEvent>().Subscribe(pagelist =>
             {
                 List = new ObservableCollection<PictureModel>(pagelist);
+            });
+            _eventAggregator.GetEvent<RemovePictureEvent>().Subscribe(page =>
+            {
+                if (List.Contains(page))
+                {
+                    var list = new List<PictureModel>(List);
+                    foreach (var item in list)
+                    {
+                        if (item.FileName == page.FileName)
+                        {
+                            list.Remove(item);
+                        }
+                    }
+
+                    List = new ObservableCollection<PictureModel>(list);
+                }
             });
         }
 
@@ -39,6 +56,7 @@ namespace SturmProjekt.ViewModels
             get { return _list; }
             set { SetProperty(ref _list, value); }
         }
+
 
         public PictureModel CurrentPage
         {

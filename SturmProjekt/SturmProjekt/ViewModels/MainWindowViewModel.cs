@@ -19,11 +19,21 @@ namespace SturmProjekt.ViewModels
 
         public MainWindowViewModel(BusinessLayer bl, IEventAggregator eventAggregator)
         {
+            CurrentPage = null;
             _bl = bl;
             _eventAggregator = eventAggregator;
             _eventAggregator.GetEvent<AddedPageEvent>().Subscribe(page =>
+            {              
+                CurrentPage = page;
+            });
+            _eventAggregator.GetEvent<SelectedPageEvent>().Subscribe((page =>
             {
-                CurrentPage = page.First();
+                CurrentPage = page;
+            }));
+            _eventAggregator.GetEvent<RemovePictureEvent>().Subscribe(page =>
+            {
+                if (CurrentPage.FileName == page.FileName)
+                    CurrentPage = null;
             });
         }
 

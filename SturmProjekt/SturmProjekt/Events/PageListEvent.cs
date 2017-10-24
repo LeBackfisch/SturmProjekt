@@ -8,7 +8,7 @@ using SturmProjekt.Models;
 
 namespace SturmProjekt.Events
 {
-    public class AddedPageEvent: PubSubEvent<PictureModel>
+    class PageListEvent: PubSubEvent<List<PictureModel>>
     {
     }
 }

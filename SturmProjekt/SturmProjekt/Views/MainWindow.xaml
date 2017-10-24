@@ -18,7 +18,7 @@
                         <RowDefinition Height="3*"></RowDefinition>
                     </Grid.RowDefinitions>
                     <views:AddRechnungView  Grid.Row="0"></views:AddRechnungView>
-                    <Image Height="300" Source="{Binding CurrentPicture, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1"></Image>
+                    <Image Source="{Binding CurrentPage.PageImage, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1"></Image>
                     <views:PageListView Grid.Row="2"></views:PageListView>
                 </Grid>
             </TabItem>

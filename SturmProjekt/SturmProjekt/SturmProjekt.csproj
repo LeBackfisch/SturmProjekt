@@ -91,6 +91,8 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Events\AddedPageEvent.cs" />
     <Compile Include="Events\CreateRechnungEvent.cs" />
+    <Compile Include="Events\PageListEvent.cs" />
+    <Compile Include="Events\RemovePictureEvent.cs" />
     <Compile Include="Events\SelectedPageEvent.cs" />
     <Compile Include="Models\PictureModel.cs" />
     <Compile Include="ViewModels\AddRechnungViewModel.cs" />
