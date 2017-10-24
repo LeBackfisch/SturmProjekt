@@ -12,6 +12,8 @@
             <Button Command="{Binding OpenFileCommand}" Content="Choose File"></Button>
             <Button Command="{Binding DeletePageCommand}" Content="Delete File"></Button>
             <Button Command="{Binding ConfirmCommand}" Content="Rechnung bestätigen"></Button>
+            <Label Content="Rechnungsname" Target="{Binding ElementName=Rechnungsname}"></Label>
+            <TextBox Name="Rechnungsname"  Text="{Binding RechnungsName, UpdateSourceTrigger=PropertyChanged}"></TextBox>
             <TextBlock Text="{Binding PictureCount}"></TextBlock>
         </StackPanel>
     </Grid>

@@ -22,6 +22,7 @@ namespace SturmProjekt.ViewModels
         private List<PictureModel> _pictureModels;
         private PictureModel _currentPage;
         private int _pictureCount;
+        private string _rechnungsName;
 
         public AddRechnungViewModel(BusinessLayer business, IEventAggregator eventAggregator)
         {
@@ -29,19 +30,28 @@ namespace SturmProjekt.ViewModels
             _eventAggregator = eventAggregator;
             OpenFileCommand = new DelegateCommand(Open, CanOpen);
             DeletePageCommand = new DelegateCommand(Delete, CanDelete);
-            ConfirmCommand = new DelegateCommand(Confirm, CanConfirm);
+            ConfirmCommand = new DelegateCommand(Confirm, CanConfirm).ObservesProperty(() => RechnungsName).ObservesProperty(() => CurrentPage);
             PictureModels = new List<PictureModel>();
             
             _eventAggregator.GetEvent<SelectedPageEvent>().Subscribe(page =>
             {
                 CurrentPage = page;
             });
+            _eventAggregator.GetEvent<AddedPageEvent>().Subscribe(page =>
+            {
+                CurrentPage = page;
+            });
+        }
+
+        public string RechnungsName
+        {
+            get { return _rechnungsName; }
+            set { SetProperty(ref _rechnungsName, value); }
         }
 
         private bool CanConfirm()
         {
-            //unfinished
-            return true;
+            return CurrentPage != null && PictureModels.Count > 0 && !(string.IsNullOrEmpty(RechnungsName));
         }
 
         private void Confirm()
@@ -49,7 +59,7 @@ namespace SturmProjekt.ViewModels
             //unfinished
             var rechnung = new RechnungsModel
             {
-                Name = "name",
+                Name = RechnungsName,
                 PageCount = PictureModels.Count,
                 Pages = PictureModels
             };
@@ -129,6 +139,10 @@ namespace SturmProjekt.ViewModels
                     }
 
                     PictureModels.AddRange(pictures);
+                    if (CurrentPage == null)
+                    {
+                        RechnungsName = _bl.GetFileNameFromFilePath(pictures.First().FileName);
+                    }
 
                 }
                 else
@@ -136,6 +150,10 @@ namespace SturmProjekt.ViewModels
                    picture.Page = _bl.ConvertImageToBitmap(picture.FileName);
                     picture.PageImage = _bl.BitmapToImageSource(picture.Page);
                     PictureModels.Add(picture);
+                    if(CurrentPage == null)
+                    {
+                        RechnungsName = _bl.GetFileNameFromFilePath(picture.FileName);
+                    }
                 }
 
                 
