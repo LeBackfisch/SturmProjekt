@@ -94,10 +94,12 @@
     <Compile Include="Events\PageListEvent.cs" />
     <Compile Include="Events\RemovePictureEvent.cs" />
     <Compile Include="Events\SelectedPageEvent.cs" />
+    <Compile Include="Models\LinesModel.cs" />
     <Compile Include="Models\PictureModel.cs" />
     <Compile Include="ViewModels\AddRechnungViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\PageListViewModel.cs" />
+    <Compile Include="ViewModels\ProfileViewModel.cs" />
     <Compile Include="Views\AddProfileView.xaml.cs">
       <DependentUpon>AddProfileView.xaml</DependentUpon>
     </Compile>

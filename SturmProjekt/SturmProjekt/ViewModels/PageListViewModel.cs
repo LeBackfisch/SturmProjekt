@@ -30,20 +30,9 @@ namespace SturmProjekt.ViewModels
             });
             _eventAggregator.GetEvent<RemovePictureEvent>().Subscribe(page =>
             {
-                if (List.Contains(page))
-                {
-                    var list = new List<PictureModel>(List);
-                    foreach (var item in list)
-                    {
-                        if (item.FileName == page.FileName)
-                        {
-                            list.Remove(item);
-                        }
-                    }
-
-                    List = new ObservableCollection<PictureModel>(list);
-                }
-            });
+               
+            }); 
+           
         }
 
         public PageListViewModel()

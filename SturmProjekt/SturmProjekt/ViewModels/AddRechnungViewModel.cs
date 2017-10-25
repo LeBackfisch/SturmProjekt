@@ -29,7 +29,7 @@ namespace SturmProjekt.ViewModels
             _bl = business;
             _eventAggregator = eventAggregator;
             OpenFileCommand = new DelegateCommand(Open, CanOpen);
-            DeletePageCommand = new DelegateCommand(Delete, CanDelete);
+            DeletePageCommand = new DelegateCommand(Delete, CanDelete).ObservesProperty(() => CurrentPage).ObservesProperty(() => PictureModels);
             ConfirmCommand = new DelegateCommand(Confirm, CanConfirm).ObservesProperty(() => RechnungsName).ObservesProperty(() => CurrentPage);
             PictureModels = new List<PictureModel>();
             
@@ -56,7 +56,6 @@ namespace SturmProjekt.ViewModels
 
         private void Confirm()
         {
-            //unfinished
             var rechnung = new RechnungsModel
             {
                 Name = RechnungsName,
@@ -77,13 +76,18 @@ namespace SturmProjekt.ViewModels
 
         private bool CanDelete()
         {
-            return CurrentPage != null && PictureCount > 0;
+            return CurrentPage != null && PictureModels.Count > 0;
         }
 
         private void Delete()
         {
             _eventAggregator.GetEvent<RemovePictureEvent>().Publish(CurrentPage);
+            PictureModels.Remove(CurrentPage);
+            
             CurrentPage = null;
+            if (PictureModels.Count == 0)
+                RechnungsName = "";
+            _eventAggregator.GetEvent<PageListEvent>().Publish(PictureModels);
         }
 
         public List<PictureModel> PictureModels
@@ -94,12 +98,6 @@ namespace SturmProjekt.ViewModels
                 SetProperty(ref _pictureModels, value);
                 
             }
-        }
-
-        public int PictureCount
-        {
-            get { return _pictureCount; }
-            set { SetProperty(ref _pictureCount, value); }
         }
 
         public ICommand DeletePageCommand { get; set; }
@@ -156,8 +154,6 @@ namespace SturmProjekt.ViewModels
                     }
                 }
 
-                
-                PictureCount = PictureModels.Count;
                 if (_pictureModels.Count > 0)
                         _eventAggregator.GetEvent<AddedPageEvent>().Publish(_pictureModels.Last());
                 _eventAggregator.GetEvent<PageListEvent>().Publish(_pictureModels);

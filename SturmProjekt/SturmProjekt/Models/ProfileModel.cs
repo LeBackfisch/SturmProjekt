@@ -8,7 +8,8 @@ namespace SturmProjekt.Models
 {
     public class ProfileModel
     {
+        public string Name { get; set; }
         public string FilePath { get; set; }
-
+        public List<LinesModel> DrawLines { get; set; }
     }
 }
