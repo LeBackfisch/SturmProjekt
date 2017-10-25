@@ -16,8 +16,8 @@
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <Button Command="{Binding PreviousCommand}" Grid.Row="2" Grid.Column="0" Content="Previous Page"></Button>
-        <Button Command="{Binding NextCommand}" Grid.Row="2" Grid.Column="1" Content="Next Page"></Button>
-        <ComboBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"></ComboBox>
+        <Button Command="{Binding PreviousCommand}" Grid.Row="0" Grid.Column="0" Content="Previous Page"></Button>
+        <Button Command="{Binding NextCommand}" Grid.Row="0" Grid.Column="1" Content="Next Page"></Button>
+        <ComboBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"></ComboBox>
     </Grid>
 </UserControl>

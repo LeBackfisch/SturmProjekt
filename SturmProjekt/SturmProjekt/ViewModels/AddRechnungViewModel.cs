@@ -87,17 +87,18 @@ namespace SturmProjekt.ViewModels
             CurrentPage = null;
             if (PictureModels.Count == 0)
                 RechnungsName = "";
-          /*  else
+            else
             {
-                if(index <= PictureModels.Count)
-                    _eventAggregator.GetEvent<SelectedPageEvent>().Publish(PictureModels[index--]);
-                else if(index > PictureModels.Count)
+                if (index == 0)
                 {
-                    int diff = PictureModels.Count - index;
-                    _eventAggregator.GetEvent<SelectedPageEvent>().Publish(PictureModels[index-diff]);
+                    //unfinished
+                   _eventAggregator.GetEvent<SelectedPageEvent>().Publish(PictureModels.ElementAt(index));  
                 }
-
-            } */
+                else if (index <= PictureModels.Count)
+                {
+                    _eventAggregator.GetEvent<SelectedPageEvent>().Publish(PictureModels.ElementAt(index-1));
+                }
+            } 
 
             _eventAggregator.GetEvent<PageListEvent>().Publish(PictureModels);
         }
@@ -107,8 +108,7 @@ namespace SturmProjekt.ViewModels
             get { return _pictureModels; }
             set
             {
-                SetProperty(ref _pictureModels, value);
-                
+                SetProperty(ref _pictureModels, value);   
             }
         }
 
