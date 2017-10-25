@@ -16,6 +16,7 @@ namespace SturmProjekt.ViewModels
         private readonly BusinessLayer _bl;
         private readonly IEventAggregator _eventAggregator;
         private PictureModel _currentPage;
+        private PictureModel _rechnungsPage;
 
         public MainWindowViewModel(BusinessLayer bl, IEventAggregator eventAggregator)
         {
@@ -35,6 +36,10 @@ namespace SturmProjekt.ViewModels
                 if (CurrentPage.FileName == page.FileName)
                     CurrentPage = null;
             });
+            _eventAggregator.GetEvent<RechnungsPageEvent>().Subscribe(page =>
+            {
+                RechnungsPage = page;
+            });
         }
 
         public MainWindowViewModel()
@@ -48,6 +53,10 @@ namespace SturmProjekt.ViewModels
             set { SetProperty(ref _currentPage, value); }
         }
 
-        
+        public PictureModel RechnungsPage
+        {
+            get { return _rechnungsPage; }
+            set { SetProperty(ref _rechnungsPage,value); }
+        }
     }
 }

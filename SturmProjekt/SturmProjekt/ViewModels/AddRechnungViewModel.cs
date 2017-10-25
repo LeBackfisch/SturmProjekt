@@ -21,7 +21,6 @@ namespace SturmProjekt.ViewModels
         private readonly IEventAggregator _eventAggregator;
         private List<PictureModel> _pictureModels;
         private PictureModel _currentPage;
-        private int _pictureCount;
         private string _rechnungsName;
 
         public AddRechnungViewModel(BusinessLayer business, IEventAggregator eventAggregator)
@@ -51,7 +50,7 @@ namespace SturmProjekt.ViewModels
 
         private bool CanConfirm()
         {
-            return CurrentPage != null && PictureModels.Count > 0 && !(string.IsNullOrEmpty(RechnungsName));
+            return PictureModels.Count > 0 && !(string.IsNullOrEmpty(RechnungsName));
         }
 
         private void Confirm()
@@ -82,11 +81,24 @@ namespace SturmProjekt.ViewModels
         private void Delete()
         {
             _eventAggregator.GetEvent<RemovePictureEvent>().Publish(CurrentPage);
+            int index = PictureModels.IndexOf(CurrentPage);
             PictureModels.Remove(CurrentPage);
             
             CurrentPage = null;
             if (PictureModels.Count == 0)
                 RechnungsName = "";
+          /*  else
+            {
+                if(index <= PictureModels.Count)
+                    _eventAggregator.GetEvent<SelectedPageEvent>().Publish(PictureModels[index--]);
+                else if(index > PictureModels.Count)
+                {
+                    int diff = PictureModels.Count - index;
+                    _eventAggregator.GetEvent<SelectedPageEvent>().Publish(PictureModels[index-diff]);
+                }
+
+            } */
+
             _eventAggregator.GetEvent<PageListEvent>().Publish(PictureModels);
         }
 

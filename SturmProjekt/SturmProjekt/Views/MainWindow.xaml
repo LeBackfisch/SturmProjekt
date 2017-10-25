@@ -23,7 +23,15 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Profile">
-                <views:ProfileView></views:ProfileView>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="3*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Image Source="{Binding RechnungsPage.PageImage, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0"></Image>
+                    <views:ProfileView Grid.Row="1"></views:ProfileView>
+                </Grid>
+               
             </TabItem>
             <TabItem Header="Fertigstellen">
                 <views:ConfirmView></views:ConfirmView>
