@@ -96,3 +96,5 @@ I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\SturmProjekt
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\SturmProjekt.csproj.CoreCompileInputs.cache
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\SturmProjekt.exe
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\SturmProjekt.pdb
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\Newtonsoft.Json.dll
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\Newtonsoft.Json.xml

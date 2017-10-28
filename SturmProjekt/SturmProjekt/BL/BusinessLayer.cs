@@ -7,12 +7,21 @@ using System.Linq;
  using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
-using Spire.Pdf;
+ using Newtonsoft.Json;
+ using Spire.Pdf;
+ using SturmProjekt.Models;
 
 namespace SturmProjekt.BL
 {
     public class BusinessLayer
     {
+        private Config _config;
+        public BusinessLayer()
+        {
+            _config = Config.Instance;
+            FilePath = _config.ProfilePath;
+        }
+
         public bool IsPdf(string fileName)
         {
             return fileName.EndsWith(".pdf");
@@ -77,6 +86,52 @@ namespace SturmProjekt.BL
 
                 return bitmapimage;
             }
+        }
+
+        public string FilePath { get; set; }
+
+        public List<ProfileModel> GetProfileList()
+        {
+            var ProfileNames = GetProfileFiles();
+            return ParseProfileModel(ProfileNames);
+        }
+
+        public List<string> GetProfileFiles()
+        {
+            var list = new List<string>();
+            if (Directory.Exists(FilePath))
+            {
+                DirectoryInfo d = new DirectoryInfo(FilePath);
+                FileInfo[] Files = d.GetFiles("*.json");
+
+                foreach (var file in Files)
+                {
+                    list.Add(file.Name);
+                }
+            }
+            return list;
+        }
+
+        public List<ProfileModel> ParseProfileModel(List<string> FileNames)
+        {
+            var ProfileList = new List<ProfileModel>();
+            foreach (var file in FileNames)
+            {
+               
+                
+                 ProfileModel profile = ParseJsonToModel(FilePath + "\\" + file);
+                ProfileList.Add(profile);
+            }
+            return ProfileList;
+        }
+
+        public ProfileModel ParseJsonToModel(string filename)
+        {
+            string content = File.ReadAllText(filename);
+
+            ProfileModel profile = JsonConvert.DeserializeObject<ProfileModel>(content);
+            profile.FilePath = filename;
+            return profile;
         }
     }
 }

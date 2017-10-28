@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Spire.Pdf.Exporting.XPS.Schema;
 
 namespace SturmProjekt.BL
 {
@@ -23,7 +24,7 @@ namespace SturmProjekt.BL
             {
                 if (string.IsNullOrWhiteSpace(_profilePath))
                 {
-                   // _profilePath = 
+                    _profilePath = Properties.Resources.ProfilesPath;
                 }
                 return _profilePath;
             }

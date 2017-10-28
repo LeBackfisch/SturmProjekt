@@ -10,6 +10,7 @@ namespace SturmProjekt.Models
     {
         public string Name { get; set; }
         public string FilePath { get; set; }
-        public List<LinesModel> DrawLines { get; set; }
+        public int PageCount { get; set; }
+        public List<ProfilePages> Pages { get; set; }
     }
 }

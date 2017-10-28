@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -23,10 +24,14 @@ namespace SturmProjekt.ViewModels
         private List<PictureModel> _rechnungsList;
         private int _currentPageNumber;
         private int _pageCount;
+        private IEnumerable<ProfileModel> _profileList;
+        private ProfileModel _selectedProfile;
+
 
         public ProfileViewModel(BusinessLayer bl, IEventAggregator eventAggregator)
         {
             _bl = bl;
+            ProfileList = new ObservableCollection<ProfileModel>(_bl.GetProfileList());
             _eventAggregator = eventAggregator;
             PreviousCommand = new DelegateCommand(Previous, CanPrevious).ObservesProperty(()=> CurrentPageNumber).ObservesProperty(() => PageCount);
             NextCommand = new DelegateCommand(Next, CanNext).ObservesProperty(()=> CurrentPageNumber).ObservesProperty(() => PageCount);
@@ -38,6 +43,7 @@ namespace SturmProjekt.ViewModels
                 RechnungsPage = RechnungsList.First();
                 CurrentPageNumber = 1;
             });
+
         }
 
         private bool CanNext()
@@ -99,8 +105,27 @@ namespace SturmProjekt.ViewModels
             set { SetProperty(ref _pageCount, value); }
         }
 
+        public IEnumerable<ProfileModel> ProfileList
+        {
+            get { return _profileList; }
+            set { SetProperty(ref _profileList, value); }
+        }
+
+        public ProfileModel SelectedProfile
+        {
+            get { return _selectedProfile; }
+            set
+            {
+                SetProperty(ref _selectedProfile, value);
+                _eventAggregator.GetEvent<DrawOnRechnungEvent>().Publish(_selectedProfile);
+            }
+        }
+
 
         public ICommand PreviousCommand { get; set; }
         public ICommand NextCommand { get; set; }
+
+        public string FilePath { get; set; }
+        
     }
 }
