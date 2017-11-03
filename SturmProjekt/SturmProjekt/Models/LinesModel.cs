@@ -8,5 +8,6 @@ namespace SturmProjekt.Models
 {
     public class LinesModel
     {
+        public int[] RectanglePositions { get; set; }
     }
 }

@@ -92,6 +92,7 @@
     </ApplicationDefinition>
     <Compile Include="BL\BusinessLayer.cs" />
     <Compile Include="BL\Config.cs" />
+    <Compile Include="BL\RechnungsLogic.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Events\AddedPageEvent.cs" />
     <Compile Include="Events\CreateRechnungEvent.cs" />

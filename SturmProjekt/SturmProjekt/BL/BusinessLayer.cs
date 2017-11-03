@@ -1,23 +1,32 @@
 ﻿ using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
+ using System.Drawing.Drawing2D;
+ using System.Drawing.Imaging;
+ using System.IO;
 using System.Linq;
  using System.Runtime;
  using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
+ using System.Windows;
+ using System.Windows.Media;
+ using System.Windows.Media.Imaging;
  using Newtonsoft.Json;
  using Spire.Pdf;
  using SturmProjekt.Models;
+ using Brushes = System.Drawing.Brushes;
+ using Color = System.Drawing.Color;
+ using Pen = System.Drawing.Pen;
 
 namespace SturmProjekt.BL
 {
     public class BusinessLayer
     {
+        private RechnungsLogic _rechnungsLogic;
         private Config _config;
         public BusinessLayer()
         {
+            _rechnungsLogic = new RechnungsLogic();
             _config = Config.Instance;
             FilePath = _config.ProfilePath;
         }
@@ -133,5 +142,50 @@ namespace SturmProjekt.BL
             profile.FilePath = filename;
             return profile;
         }
+
+        public RechnungsModel DrawOnRechnungsModel(RechnungsModel Rechnung)
+        {
+            List<PictureModel> pictureModels = new List<PictureModel>();
+            RechnungsModel rechnung = new RechnungsModel();
+
+            foreach (var pictureItem in Rechnung.Pages)
+            {
+                PictureModel pictureModel = new PictureModel();
+                pictureModel.FileName = pictureItem.FileName;
+                var bitmap = DrawonBitmap(pictureItem.Page);
+                pictureModel.Page = bitmap;
+                pictureModel.PageImage = BitmapToImageSource(bitmap);
+                pictureModels.Add(pictureModel);
+            }
+            
+            rechnung.Pages = new List<PictureModel>();
+            rechnung.Pages.AddRange(pictureModels);
+            rechnung.Name = Rechnung.Name;
+            rechnung.PageCount = rechnung.Pages.Count;
+            return rechnung;
+        }
+
+        public Bitmap DrawonBitmap(Bitmap bitmap)
+        {
+
+            RectangleF rectf = new RectangleF(70, 90, 90, 50);
+
+            Graphics g = Graphics.FromImage(bitmap);
+
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            Pen redPen = new Pen(Brushes.Red);
+            g.DrawRectangle(redPen,
+                new Rectangle(40, 40, 150, 200));
+        
+            g.Flush();
+
+            return bitmap;
+        }
+
+
+
+
     }
 }

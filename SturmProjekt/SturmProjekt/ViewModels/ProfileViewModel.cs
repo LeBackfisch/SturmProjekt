@@ -26,6 +26,7 @@ namespace SturmProjekt.ViewModels
         private int _pageCount;
         private IEnumerable<ProfileModel> _profileList;
         private ProfileModel _selectedProfile;
+        private RechnungsModel _rechnungWithoutLines;
 
 
         public ProfileViewModel(BusinessLayer bl, IEventAggregator eventAggregator)
@@ -35,6 +36,7 @@ namespace SturmProjekt.ViewModels
             _eventAggregator = eventAggregator;
             PreviousCommand = new DelegateCommand(Previous, CanPrevious).ObservesProperty(()=> CurrentPageNumber).ObservesProperty(() => PageCount);
             NextCommand = new DelegateCommand(Next, CanNext).ObservesProperty(()=> CurrentPageNumber).ObservesProperty(() => PageCount);
+            DrawCommand = new DelegateCommand(Draw, CanDraw).ObservesProperty(()=> RechnungsPage);
             _eventAggregator.GetEvent<CreateRechnungEvent>().Subscribe(rechnung =>
             {
                 Rechnung = rechnung;
@@ -43,7 +45,25 @@ namespace SturmProjekt.ViewModels
                 RechnungsPage = RechnungsList.First();
                 CurrentPageNumber = 1;
             });
+            
+           
 
+        }
+
+        private bool CanDraw()
+        {
+            return RechnungsPage != null;
+        }
+
+        private void Draw()
+        {
+           var drawLinesRechnung = _bl.DrawOnRechnungsModel(Rechnung);
+           
+            RechnungWithoutLines = Rechnung;
+            Rechnung = drawLinesRechnung;
+            RechnungsList = drawLinesRechnung.Pages;
+            RechnungsPage = drawLinesRechnung.Pages[CurrentPageNumber-1];
+            _eventAggregator.GetEvent<DrawOnRechnungEvent>().Publish(drawLinesRechnung);
         }
 
         private bool CanNext()
@@ -64,6 +84,12 @@ namespace SturmProjekt.ViewModels
             RechnungsPage = RechnungsList[CurrentPageNumber-1];
             _eventAggregator.GetEvent<RechnungsPageEvent>().Publish(RechnungsPage);
 
+        }
+
+        public RechnungsModel RechnungWithoutLines
+        {
+            get { return _rechnungWithoutLines; }
+            set { SetProperty(ref _rechnungWithoutLines, value); }
         }
 
         private bool CanPrevious()
@@ -117,14 +143,14 @@ namespace SturmProjekt.ViewModels
             set
             {
                 SetProperty(ref _selectedProfile, value);
-                _eventAggregator.GetEvent<DrawOnRechnungEvent>().Publish(_selectedProfile);
+               // _eventAggregator.GetEvent<DrawOnRechnungEvent>().Publish(_selectedProfile);
             }
         }
 
 
         public ICommand PreviousCommand { get; set; }
         public ICommand NextCommand { get; set; }
-
+        public ICommand DrawCommand { get; set; }
         public string FilePath { get; set; }
         
     }

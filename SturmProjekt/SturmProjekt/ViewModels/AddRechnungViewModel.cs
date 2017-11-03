@@ -94,7 +94,7 @@ namespace SturmProjekt.ViewModels
                     //unfinished
                    _eventAggregator.GetEvent<SelectedPageEvent>().Publish(PictureModels.ElementAt(index));  
                 }
-                else if (index <= PictureModels.Count)
+                else
                 {
                     _eventAggregator.GetEvent<SelectedPageEvent>().Publish(PictureModels.ElementAt(index-1));
                 }
@@ -125,7 +125,7 @@ namespace SturmProjekt.ViewModels
         {
             var open = new OpenFileDialog
             {
-                Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png |PDFs (*.pdf)|*.pdf"
+                Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png; *.PNG |PDFs (*.pdf)|*.pdf"
             };
             if (open.ShowDialog() == true)
             {

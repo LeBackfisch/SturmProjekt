@@ -11,6 +11,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -34,6 +35,6 @@
                 </Style>
             </ComboBox.Style>
         </ComboBox>
-
+        <Button Command="{Binding DrawCommand}" Grid.Row="2" Grid.Column="0"></Button>
     </Grid>
 </UserControl>

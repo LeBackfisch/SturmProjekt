@@ -8,7 +8,7 @@ using SturmProjekt.Models;
 
 namespace SturmProjekt.Events
 {
-    public class DrawOnRechnungEvent : PubSubEvent<ProfileModel>
+    public class DrawOnRechnungEvent : PubSubEvent<RechnungsModel>
     {
     }
 }
