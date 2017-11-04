@@ -25,7 +25,7 @@
                     <StackPanel>
                         <Image Source="{Binding PageImage, IsAsync=True}"
                              
-                               MaxWidth="200"></Image>
+                               MaxHeight="230"></Image>
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>

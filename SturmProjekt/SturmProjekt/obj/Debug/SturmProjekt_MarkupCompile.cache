@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\App.xaml
-7-1289620648
+7-789926054
 
-31848109243
+34-128382352
 79-516945012
-Views\AddRechnungView.xaml;Views\ChooseProfileView.xaml;Views\ConfirmView.xaml;Views\MainWindow.xaml;Views\AddProfileView.xaml;Views\PageListView.xaml;Views\ProfileView.xaml;
+Views\AddRechnungView.xaml;Views\ChooseProfileView.xaml;Views\ConfirmView.xaml;Views\MainWindow.xaml;Views\NavigateProfileView.xaml;Views\PageListView.xaml;Views\ProfileView.xaml;
 
 False
 

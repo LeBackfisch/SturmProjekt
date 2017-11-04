@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace SturmProjekt.Views
 {
     /// <summary>
-    /// Interaktionslogik für AddProfileView.xaml
+    /// Interaktionslogik für NavigateProfileView.xaml
     /// </summary>
-    public partial class AddProfileView : Window
+    public partial class NavigateProfileView : UserControl
     {
-        public AddProfileView()
+        public NavigateProfileView()
         {
             InitializeComponent();
         }

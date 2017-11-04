@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using Prism.Events;
 using Prism.Mvvm;
 using SturmProjekt.BL;
@@ -28,28 +23,22 @@ namespace SturmProjekt.ViewModels
             {
                 List = new ObservableCollection<PictureModel>(pagelist);
             });
-            _eventAggregator.GetEvent<RemovePictureEvent>().Subscribe(page =>
+            _eventAggregator.GetEvent<DeletedPageEvent>().Subscribe(page =>
             {
-               
-            }); 
-           
-        }
-
-        public PageListViewModel()
-        {
-           
+                CurrentPage = page;
+            });
         }
         
         public IEnumerable<PictureModel> List
         {
-            get { return _list; }
-            set { SetProperty(ref _list, value); }
+            get => _list;
+            set => SetProperty(ref _list, value);
         }
 
 
         public PictureModel CurrentPage
         {
-            get { return _currentPage; }
+            get => _currentPage;
             set
             {
                 SetProperty(ref _currentPage, value); 

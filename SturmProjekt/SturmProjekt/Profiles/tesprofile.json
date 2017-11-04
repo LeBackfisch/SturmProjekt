@@ -3,8 +3,24 @@
 "PageCount":"3",
 "Pages":[
 			{
-			
+			"DrawLines": 
+				[
+					{
+						"X":50,
+						"Y":50,
+						"Width":300,
+						"Height":300
+						
+					},
 					
+					{
+						"X":250,
+						"Y":350,
+						"Width":200,
+						"Height":200
+					}
+					
+				]	
 			}
 		]
 }

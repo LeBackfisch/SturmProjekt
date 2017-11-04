@@ -77,7 +77,6 @@ I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\AddRec
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\ChooseProfileView.g.cs
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\ConfirmView.g.cs
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\MainWindow.g.cs
-I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\AddProfileView.g.cs
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\PageListView.g.cs
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\ProfileView.g.cs
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\App.g.cs
@@ -87,7 +86,6 @@ I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\SturmProjekt
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\ChooseProfileView.baml
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\ConfirmView.baml
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\MainWindow.baml
-I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\AddProfileView.baml
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\PageListView.baml
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\ProfileView.baml
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\SturmProjekt.g.resources
@@ -98,3 +96,5 @@ I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\SturmProjekt
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\SturmProjekt.pdb
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\Newtonsoft.Json.dll
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\Newtonsoft.Json.xml
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\NavigateProfileView.baml
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\NavigateProfileView.g.cs

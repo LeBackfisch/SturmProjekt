@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Prism.Events;
+﻿using Prism.Events;
 using Prism.Mvvm;
 using SturmProjekt.BL;
 using SturmProjekt.Events;
@@ -40,6 +35,7 @@ namespace SturmProjekt.ViewModels
             {
                 RechnungsPage = page;
             });
+            
         }
 
         public MainWindowViewModel()
@@ -49,14 +45,14 @@ namespace SturmProjekt.ViewModels
 
         public PictureModel CurrentPage
         {
-            get { return _currentPage; }
-            set { SetProperty(ref _currentPage, value); }
+            get => _currentPage;
+            set => SetProperty(ref _currentPage, value);
         }
 
         public PictureModel RechnungsPage
         {
-            get { return _rechnungsPage; }
-            set { SetProperty(ref _rechnungsPage,value); }
+            get => _rechnungsPage;
+            set => SetProperty(ref _rechnungsPage,value);
         }
     }
 }

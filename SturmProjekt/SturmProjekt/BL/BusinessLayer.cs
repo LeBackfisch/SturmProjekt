@@ -1,22 +1,14 @@
-﻿ using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
- using System.Drawing.Drawing2D;
- using System.Drawing.Imaging;
- using System.IO;
+using System.Drawing.Drawing2D;
+using System.IO;
 using System.Linq;
- using System.Runtime;
- using System.Text;
-using System.Threading.Tasks;
- using System.Windows;
- using System.Windows.Media;
- using System.Windows.Media.Imaging;
- using Newtonsoft.Json;
- using Spire.Pdf;
- using SturmProjekt.Models;
- using Brushes = System.Drawing.Brushes;
- using Color = System.Drawing.Color;
- using Pen = System.Drawing.Pen;
+using System.Windows.Media.Imaging;
+using Newtonsoft.Json;
+using Spire.Pdf;
+using SturmProjekt.Models;
+using Brushes = System.Drawing.Brushes;
+using Pen = System.Drawing.Pen;
 
 namespace SturmProjekt.BL
 {
@@ -38,20 +30,16 @@ namespace SturmProjekt.BL
 
         public PdfDocument GetPdfDocument(string filepath)
         {
-            if (File.Exists(filepath))
-            {
-                var pdf = new PdfDocument();
-                pdf.LoadFromFile(filepath);
-                return pdf;
-            }
-            else
-                return null;
+            if (!File.Exists(filepath)) return null;
+            var pdf = new PdfDocument();
+            pdf.LoadFromFile(filepath);
+            return pdf;
         }
 
         public List<Bitmap> GetBitMapFromPDF(PdfDocument pdf)
         {
-          List<Bitmap> images = new List<Bitmap>();
-            int pagecount = pdf.Pages.Count;
+          var images = new List<Bitmap>();
+            var pagecount = pdf.Pages.Count;
 
             for (var i = 0; i < pagecount; i++)
             {
@@ -76,18 +64,17 @@ namespace SturmProjekt.BL
                 var image = Image.FromStream(bmpStream);
 
                 bitmap = new Bitmap(image);
-
             }
             return bitmap;
         }
 
         public BitmapImage BitmapToImageSource(Bitmap bitmap)
         {
-            using (MemoryStream memory = new MemoryStream())
+            using (var memory = new MemoryStream())
             {
                 bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
                 memory.Position = 0;
-                BitmapImage bitmapimage = new BitmapImage();
+                var bitmapimage = new BitmapImage();
                 bitmapimage.BeginInit();
                 bitmapimage.StreamSource = memory;
                 bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
@@ -108,15 +95,13 @@ namespace SturmProjekt.BL
         public List<string> GetProfileFiles()
         {
             var list = new List<string>();
-            if (Directory.Exists(FilePath))
-            {
-                DirectoryInfo d = new DirectoryInfo(FilePath);
-                FileInfo[] Files = d.GetFiles("*.json");
+            if (!Directory.Exists(FilePath)) return list;
+            var d = new DirectoryInfo(FilePath);
+            FileInfo[] Files = d.GetFiles("*.json");
 
-                foreach (var file in Files)
-                {
-                    list.Add(file.Name);
-                }
+            foreach (var file in Files)
+            {
+                list.Add(file.Name);
             }
             return list;
         }
@@ -125,9 +110,7 @@ namespace SturmProjekt.BL
         {
             var ProfileList = new List<ProfileModel>();
             foreach (var file in FileNames)
-            {
-               
-                
+            {    
                  ProfileModel profile = ParseJsonToModel(FilePath + "\\" + file);
                 ProfileList.Add(profile);
             }
@@ -137,14 +120,17 @@ namespace SturmProjekt.BL
         public ProfileModel ParseJsonToModel(string filename)
         {
             string content = File.ReadAllText(filename);
-
             ProfileModel profile = JsonConvert.DeserializeObject<ProfileModel>(content);
             profile.FilePath = filename;
             return profile;
         }
 
-        public RechnungsModel DrawOnRechnungsModel(RechnungsModel Rechnung)
+        public RechnungsModel DrawOnRechnungsModel(RechnungsModel Rechnung, ProfileModel SelectedProfile)
         {
+            List<ProfilePages> pages = SelectedProfile.Pages;
+
+            int index = 0;
+
             List<PictureModel> pictureModels = new List<PictureModel>();
             RechnungsModel rechnung = new RechnungsModel();
 
@@ -152,10 +138,11 @@ namespace SturmProjekt.BL
             {
                 PictureModel pictureModel = new PictureModel();
                 pictureModel.FileName = pictureItem.FileName;
-                var bitmap = DrawonBitmap(pictureItem.Page);
+                var bitmap = DrawonBitmap(pictureItem.Page, pages.ElementAt(index));
                 pictureModel.Page = bitmap;
                 pictureModel.PageImage = BitmapToImageSource(bitmap);
                 pictureModels.Add(pictureModel);
+                index++;
             }
             
             rechnung.Pages = new List<PictureModel>();
@@ -165,20 +152,21 @@ namespace SturmProjekt.BL
             return rechnung;
         }
 
-        public Bitmap DrawonBitmap(Bitmap bitmap)
+        public Bitmap DrawonBitmap(Bitmap bitmap, ProfilePages profilePage)
         {
-
-            RectangleF rectf = new RectangleF(70, 90, 90, 50);
-
             Graphics g = Graphics.FromImage(bitmap);
 
-            g.SmoothingMode = SmoothingMode.AntiAlias;
-            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            Pen redPen = new Pen(Brushes.Red);
-            g.DrawRectangle(redPen,
-                new Rectangle(40, 40, 150, 200));
-        
+            List<LinesModel> lines = profilePage.DrawLines;
+
+            foreach (var line in lines)
+            {
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                Pen redPen = new Pen(Brushes.Red);
+                g.DrawRectangle(redPen,
+                    new Rectangle(line.X, line.Y, line.Width, line.Height));
+            }        
             g.Flush();
 
             return bitmap;

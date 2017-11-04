@@ -7,19 +7,22 @@
         xmlns:mvvm="http://prismlibrary.com/"
         mvvm:ViewModelLocator.AutoWireViewModel="True"
         mc:Ignorable="d"
-        Title="MainWindow" Height="800" Width="1000">
+        Title="MainWindow" Height="1000" Width="1000">
     <Grid>
         <TabControl>
             <TabItem Header="Rechnung hinzufügen">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="2*"></RowDefinition>
-                        <RowDefinition Height="4*"></RowDefinition>
+                        <RowDefinition Height="8*"></RowDefinition>
                         <RowDefinition Height="3*"></RowDefinition>
                     </Grid.RowDefinitions>
-                    <views:AddRechnungView  Grid.Row="0"></views:AddRechnungView>
-                    <Image Source="{Binding CurrentPage.PageImage, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1"></Image>
-                    <views:PageListView Grid.Row="2"></views:PageListView>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*"></ColumnDefinition>
+                        <ColumnDefinition Width ="2*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <views:AddRechnungView  Grid.Row="0" Grid.Column="1"></views:AddRechnungView>
+                    <Image Source="{Binding CurrentPage.PageImage, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="0"></Image>
+                    <views:PageListView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"></views:PageListView>
                 </Grid>
             </TabItem>
             <TabItem Header="Profile">
@@ -28,8 +31,13 @@
                         <RowDefinition Height="3*"></RowDefinition>
                         <RowDefinition Height="*"></RowDefinition>
                     </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*"></ColumnDefinition>
+                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
                     <Image Source="{Binding RechnungsPage.PageImage, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0"></Image>
-                    <views:ProfileView Grid.Row="1"></views:ProfileView>
+                    <views:ProfileView Grid.Row="0" Grid.Column="1"></views:ProfileView>
+                    <views:NavigateProfileView Grid.Row="1"></views:NavigateProfileView>
                 </Grid>
                
             </TabItem>

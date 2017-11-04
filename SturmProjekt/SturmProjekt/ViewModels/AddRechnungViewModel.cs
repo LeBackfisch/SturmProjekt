@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.Win32;
 using Prism.Commands;
@@ -67,8 +63,8 @@ namespace SturmProjekt.ViewModels
 
         public PictureModel CurrentPage
         {
-            get { return _currentPage; }
-            set { SetProperty(ref _currentPage,value); }
+            get => _currentPage;
+            set => SetProperty(ref _currentPage,value);
         }
 
         public ICommand ConfirmCommand { get; set; }
@@ -89,15 +85,8 @@ namespace SturmProjekt.ViewModels
                 RechnungsName = "";
             else
             {
-                if (index == 0)
-                {
-                    //unfinished
-                   _eventAggregator.GetEvent<SelectedPageEvent>().Publish(PictureModels.ElementAt(index));  
-                }
-                else
-                {
-                    _eventAggregator.GetEvent<SelectedPageEvent>().Publish(PictureModels.ElementAt(index-1));
-                }
+                _eventAggregator.GetEvent<DeletedPageEvent>()
+                    .Publish(index == 0 ? PictureModels.ElementAt(index) : PictureModels.ElementAt(index - 1));
             } 
 
             _eventAggregator.GetEvent<PageListEvent>().Publish(PictureModels);
@@ -105,11 +94,8 @@ namespace SturmProjekt.ViewModels
 
         public List<PictureModel> PictureModels
         {
-            get { return _pictureModels; }
-            set
-            {
-                SetProperty(ref _pictureModels, value);   
-            }
+            get => _pictureModels;
+            set => SetProperty(ref _pictureModels, value);
         }
 
         public ICommand DeletePageCommand { get; set; }
