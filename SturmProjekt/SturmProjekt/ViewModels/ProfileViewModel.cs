@@ -33,6 +33,7 @@ namespace SturmProjekt.ViewModels
             ProfileList = new ObservableCollection<ProfileModel>(_bl.GetProfileList());
             _eventAggregator = eventAggregator;
             DrawCommand = new DelegateCommand(Draw, CanDraw).ObservesProperty(()=> RechnungsPage).ObservesProperty(() => SelectedProfile);
+            SortRechnungCommnad = new DelegateCommand(Sort, CanSort).ObservesProperty(() => Rechnung).ObservesProperty(() => SelectedProfile);
             _eventAggregator.GetEvent<CreateRechnungEvent>().Subscribe(rechnung =>
             {
                 Rechnung = rechnung;
@@ -47,6 +48,16 @@ namespace SturmProjekt.ViewModels
                 RechnungsPage = RechnungsList.ElementAt(CurrentPageNumber);
             });
 
+        }
+
+        private bool CanSort()
+        {
+            return SelectedProfile != null && Rechnung != null;
+        }
+
+        private void Sort()
+        {
+           _bl.CutOutBitmaps(Rechnung, SelectedProfile);
         }
 
         private bool CanDraw()
@@ -139,6 +150,7 @@ namespace SturmProjekt.ViewModels
         }
 
         public ICommand DrawCommand { get; set; }
+        public ICommand SortRechnungCommnad { get; set; }
         public string FilePath { get; set; }
         
     }

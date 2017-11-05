@@ -172,6 +172,17 @@ namespace SturmProjekt.BL
             return bitmap;
         }
 
+        public void CutOutBitmaps(RechnungsModel rechnung, ProfileModel profile)
+        {
+            var bitmaps = new List<Bitmap>();
+            var pages = rechnung.Pages;
+            
+            foreach (var page in pages)
+            {
+                bitmaps.Add(page.Page);
+            }
+            _rechnungsLogic.GetCutOutBitmaps(bitmaps, profile.Pages);
+        }
 
 
 

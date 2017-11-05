@@ -6,25 +6,36 @@ using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using SturmProjekt.Models;
 
 namespace SturmProjekt.BL
 {
     public class RechnungsLogic
     {
-        public Bitmap CutoutBitmap(Bitmap sourceBitmap)
+        public List<Bitmap> CutoutBitmap(Bitmap sourceBitmap, ProfilePages profilePage)
         {
-            var srcRect = new Rectangle(0, 0, 100, 100);
-            return sourceBitmap.Clone(srcRect, sourceBitmap.PixelFormat);
+            List<Bitmap> cutoutBitmaps = new List<Bitmap>();
+            List<LinesModel> lines = profilePage.DrawLines;
+
+            foreach (var line in lines)
+            {
+                var srcRect = new Rectangle(line.X, line.Y, line.Width, line.Height);
+               cutoutBitmaps.Add(sourceBitmap.Clone(srcRect, sourceBitmap.PixelFormat));
+            }
+
+            return cutoutBitmaps;
         }
 
-        public List<Bitmap> GetCutOutBitmaps(List<Bitmap> bitmaps)
+        public List<Bitmap> GetCutOutBitmaps(List<Bitmap> bitmaps, List<ProfilePages> pages)
         {
+            int index = 0;
             var cutoutbitmaps = new List<Bitmap>();
             foreach (var bitmap in bitmaps)
             {
-                cutoutbitmaps.Add(CutoutBitmap(bitmap));
+                var cutout = CutoutBitmap(bitmap, pages.ElementAt(index));
+                cutoutbitmaps.AddRange(cutout);
+                index++;
             }
-
             return cutoutbitmaps;
         }
 
