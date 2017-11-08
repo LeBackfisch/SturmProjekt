@@ -35,6 +35,7 @@ namespace SturmProjekt.BL
             foreach (var bitmap in bitmaps)
             {
                 var cutout = CutoutBitmap(bitmap, pages.ElementAt(index));
+               // cutout.First().Save(@"I:\vgames\logo.jpg", ImageFormat.Jpeg);
                 cutoutbitmaps.AddRange(cutout);
                 index++;
             }

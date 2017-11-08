@@ -53,7 +53,7 @@ namespace SturmProjekt.BL
             {
                 resizedimages.Add(ResizeBitmap(image));
             }
-            return images;
+            return resizedimages;
         } 
 
         public string GetFileNameFromFilePath(string filepath)
@@ -189,7 +189,8 @@ namespace SturmProjekt.BL
                 g.SmoothingMode = SmoothingMode.AntiAlias;
                 g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                 g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                Pen redPen = new Pen(Brushes.Red);
+                Pen redPen = new Pen(Brushes.Red, 5);
+                redPen.Alignment = PenAlignment.Outset;
                 g.DrawRectangle(redPen,
                     new Rectangle(line.X, line.Y, line.Width, line.Height));
             }        

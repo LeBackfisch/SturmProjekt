@@ -58,7 +58,7 @@ namespace SturmProjekt.ViewModels
 
         private void Sort()
         {
-           _bl.CutOutBitmaps(Rechnung, SelectedProfile);
+           _bl.CutOutBitmaps(RechnungWithoutLines, SelectedProfile);
         }
 
         private bool CanDraw()
