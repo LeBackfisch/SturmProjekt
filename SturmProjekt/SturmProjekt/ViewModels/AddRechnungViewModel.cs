@@ -143,7 +143,7 @@ namespace SturmProjekt.ViewModels
                 }
                 else
                 {
-                   picture.Page = _bl.ConvertImageToBitmap(picture.FileName);
+                   picture.Page =   _bl.ResizeBitmap(_bl.ConvertImageToBitmap(picture.FileName));
                     picture.PageImage = _bl.BitmapToImageSource(picture.Page);
                     PictureModels.Add(picture);
                     if(CurrentPage == null)

@@ -10,6 +10,7 @@ namespace SturmProjekt.BL
     public class Config
     {
         private string _profilePath;
+        private string _dataPath;
 
 
         protected Config()
@@ -29,6 +30,19 @@ namespace SturmProjekt.BL
                 return _profilePath;
             }
             set { _profilePath = value; }
+        }
+
+        public string DataPath
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(_dataPath))
+                {
+                    _dataPath = Properties.Resources.DataPath;
+                }
+                return _dataPath;
+            }
+            set { _dataPath = value; }
         }
 
         private static Config _instance;

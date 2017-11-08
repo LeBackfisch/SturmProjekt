@@ -61,6 +61,15 @@ namespace SturmProjekt.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\Database ähnelt.
+        /// </summary>
+        internal static string DataPath {
+            get {
+                return ResourceManager.GetString("DataPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\Profiles ähnelt.
         /// </summary>
         internal static string ProfilesPath {

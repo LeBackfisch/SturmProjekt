@@ -35,13 +35,13 @@ namespace SturmProjekt.ViewModels
         private void Next()
         {
             CurrentPageNumber++;
-            _eventAggregator.GetEvent<ChosenPageEvent>().Publish(CurrentPageNumber - 1);
+            _eventAggregator.GetEvent<ChosenPageEvent>().Publish(CurrentPageNumber);
         }
 
         private void Previous()
         {
             CurrentPageNumber--;
-            _eventAggregator.GetEvent<ChosenPageEvent>().Publish(CurrentPageNumber-1);
+            _eventAggregator.GetEvent<ChosenPageEvent>().Publish(CurrentPageNumber);
         }
 
         private bool CanPrevious()

@@ -1,0 +1,26 @@
+{
+"Name":"TestWienEnergie",
+"PageCount":"3",
+"Pages":[
+			{
+			"DrawLines": 
+				[
+					{
+						"X":300,
+						"Y":500,
+						"Width":300,
+						"Height":300
+						
+					},
+					
+					{
+						"X":550,
+						"Y":550,
+						"Width":200,
+						"Height":200
+					}
+					
+				]	
+			}
+		]
+}

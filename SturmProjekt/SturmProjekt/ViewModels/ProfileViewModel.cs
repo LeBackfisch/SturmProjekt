@@ -37,6 +37,7 @@ namespace SturmProjekt.ViewModels
             _eventAggregator.GetEvent<CreateRechnungEvent>().Subscribe(rechnung =>
             {
                 Rechnung = rechnung;
+                RechnungWithoutLines = rechnung;
                 PageCount = rechnung.PageCount;
                 RechnungsList = rechnung.Pages;
                 RechnungsPage = RechnungsList.First();
@@ -45,7 +46,7 @@ namespace SturmProjekt.ViewModels
             _eventAggregator.GetEvent<ChosenPageEvent>().Subscribe(pagenumber =>
             {
                 CurrentPageNumber = pagenumber;
-                RechnungsPage = RechnungsList.ElementAt(CurrentPageNumber);
+                RechnungsPage = RechnungsList.ElementAt(CurrentPageNumber-1);
             });
 
         }
@@ -69,13 +70,11 @@ namespace SturmProjekt.ViewModels
         {
             if (_buttonclicked == false)
             {
-                var drawLinesRechnung = _bl.DrawOnRechnungsModel(Rechnung, SelectedProfile);
+                var drawLinesRechnung = _bl.DrawOnRechnungsModel(RechnungWithoutLines, SelectedProfile);
                 ButtonText = "Remove Lines";
-                RechnungWithoutLines = Rechnung;
                 Rechnung = drawLinesRechnung;
                 RechnungsList = drawLinesRechnung.Pages;
                 RechnungsPage = drawLinesRechnung.Pages[CurrentPageNumber - 1];
-                _eventAggregator.GetEvent<DrawOnRechnungEvent>().Publish(drawLinesRechnung);
                 _buttonclicked = true;
             }
             else
@@ -84,7 +83,6 @@ namespace SturmProjekt.ViewModels
                 Rechnung = RechnungWithoutLines;
                 RechnungsList = RechnungWithoutLines.Pages;
                 RechnungsPage = RechnungWithoutLines.Pages[CurrentPageNumber - 1];
-                _eventAggregator.GetEvent<DrawOnRechnungEvent>().Publish(RechnungWithoutLines);
                 _buttonclicked = false;
             }
            
@@ -140,7 +138,18 @@ namespace SturmProjekt.ViewModels
         public ProfileModel SelectedProfile
         {
             get => _selectedProfile;
-            set => SetProperty(ref _selectedProfile, value);
+            set
+            {
+               
+                    Rechnung = RechnungWithoutLines;
+                    RechnungsList = RechnungWithoutLines.Pages;
+                    RechnungsPage = RechnungWithoutLines.Pages[CurrentPageNumber - 1];
+                    ButtonText = "Add Lines";
+                    _buttonclicked = false;
+                
+           
+                SetProperty(ref _selectedProfile, value);
+            }
         }
 
         public string ButtonText

@@ -1,0 +1,26 @@
+{
+"Name":"WienEnergieV2",
+"PageCount":"3",
+"Pages":[
+			{
+			"DrawLines": 
+				[
+					{
+						"X":500,
+						"Y":500,
+						"Width":300,
+						"Height":300
+						
+					},
+					
+					{
+						"X":750,
+						"Y":750,
+						"Width":200,
+						"Height":200
+					}
+					
+				]	
+			}
+		]
+}
