@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Windows.Media.Imaging;
 using Newtonsoft.Json;
 using Spire.Pdf;
+using Spire.Pdf.Graphics;
 using SturmProjekt.Models;
 using Brushes = System.Drawing.Brushes;
 using Pen = System.Drawing.Pen;
@@ -223,19 +226,49 @@ namespace SturmProjekt.BL
             int chosenlogo = -1;
             foreach (var logoBitmap in logoList)
             {
-                if (_rechnungsLogic.CompareBitmaps(logoBitmap, cutOutBitmaps.First()))
+                if (_rechnungsLogic.CompareBitmapsFast(logoBitmap, cutOutBitmaps.First()))
                 {
                     chosenlogo = logoindex;
                 }
+
+                /*   if (_rechnungsLogic.CompareBitmaps(logoBitmap, cutOutBitmaps.First()))
+                   {
+                       chosenlogo = logoindex;
+                   } */
                 logoindex++;
             }
             if (chosenlogo != -1)
             {
-                var found = directories.ElementAt(chosenlogo);
+                var category = GetChosenCategory(directories, logoindex);
+                SaveRechnungAsPDF(rechnung, category);
             }
             
+        }
 
+        public string GetChosenCategory(List<string> directories, int index)
+        {
+            return directories[index];
+        }
 
+        public void SaveRechnungAsPDF(RechnungsModel rechnung, string category)
+        {
+            PdfDocument doc = new PdfDocument();
+            foreach (var rechnungPage in rechnung.Pages)
+            {
+                PdfPageBase page = doc.Pages.Add();
+                PdfImage image = PdfImage.FromImage(rechnungPage.Page);
+
+                float widthFitRate = image.PhysicalDimension.Width / page.Canvas.ClientSize.Width;
+                float heightFitRate = image.PhysicalDimension.Height / page.Canvas.ClientSize.Height;
+                float fitRate = Math.Max(widthFitRate, heightFitRate);
+                float fitWidth = image.PhysicalDimension.Width / fitRate;
+                float fitHeight = image.PhysicalDimension.Height / fitRate;
+
+                page.Canvas.DrawImage(image, 0, 0, page.Canvas.ClientSize.Width, page.Canvas.ClientSize.Height);
+            }
+           
+            doc.SaveToFile(DataPath+"\\"+category+"\\"+rechnung.Name+".pdf");
+            doc.Close();
         }
 
 
