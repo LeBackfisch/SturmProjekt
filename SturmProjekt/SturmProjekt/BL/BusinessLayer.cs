@@ -226,10 +226,22 @@ namespace SturmProjekt.BL
             int chosenlogo = -1;
             foreach (var logoBitmap in logoList)
             {
-                if (_rechnungsLogic.CompareBitmapsFast(logoBitmap, cutOutBitmaps.First()))
+              /*  if (_rechnungsLogic.Equals(logoBitmap, cutOutBitmaps.First()))
+                {
+                    chosenlogo = logoindex;
+                } */
+
+               // logoBitmap.Save(@"I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\Database\logo"+logoindex+".jpg", ImageFormat.Jpeg);
+               // cutOutBitmaps.First().Save(@"I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\Database\compare.jpg", ImageFormat.Jpeg);
+                if (_rechnungsLogic.difference(logoBitmap, cutOutBitmaps.First()))
                 {
                     chosenlogo = logoindex;
                 }
+
+            /*    if (_rechnungsLogic.CompareBitmapsFast(logoBitmap, cutOutBitmaps.First()))
+                {
+                    chosenlogo = logoindex;
+                }  */
 
                 /*   if (_rechnungsLogic.CompareBitmaps(logoBitmap, cutOutBitmaps.First()))
                    {
@@ -271,7 +283,49 @@ namespace SturmProjekt.BL
             doc.Close();
         }
 
+        public void SortDirectoryFiles(List<FileModel> fileModels, ProfileModel selectedProfile)
+        {
+            List<RechnungsModel> pdfRechnungen = new List<RechnungsModel>();
+            List<FileModel> imageFiles = new List<FileModel>();
+            foreach (var file in fileModels)
+            {
+                if (file.FileName.EndsWith(".pdf"))
+                {
+                   var bitmaps = GetBitMapFromPDF(GetPdfDocument(file.FilePath));
+                   List<PictureModel> pages = new List<PictureModel>();
+                    foreach (var bitmap in bitmaps)
+                    {
+                        PictureModel pictureModel = new PictureModel();
+                        pictureModel.FileName = file.FileName;
+                        pictureModel.Page = ResizeBitmap(bitmap);
+                        pictureModel.PageImage = BitmapToImageSource(pictureModel.Page);
+                        pages.Add(pictureModel);
+                    }
 
+                    RechnungsModel rechnung = new RechnungsModel();
+                    rechnung.Pages = pages;
+                    rechnung.Name = pages.First().FileName;
+                    rechnung.PageCount = pages.Count;
+                }
+                else
+                {
+                    imageFiles.Add(file);
+                }         
+            }
+
+            foreach (var rechnung in pdfRechnungen)
+            {
+                CutOutBitmaps(rechnung, selectedProfile);
+            }
+
+            MoveUnidentifiedImages(imageFiles);
+
+        }
+
+        public void MoveUnidentifiedImages(List<FileModel> files)
+        {
+            
+        }
 
     }
 

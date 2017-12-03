@@ -41,8 +41,8 @@
                 </Grid>
                
             </TabItem>
-            <TabItem Header="Fertigstellen">
-                <views:ConfirmView></views:ConfirmView>
+            <TabItem Header="Ordner einordnen">
+                <views:BulkEditView></views:BulkEditView>
             </TabItem>
         </TabControl>
 

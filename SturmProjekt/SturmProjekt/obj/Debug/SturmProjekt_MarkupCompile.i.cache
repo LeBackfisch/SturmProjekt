@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\App.xaml
-7-789926054
+6314649186
 
-37-542374071
+381907769244
 79-516945012
-Views\AddRechnungView.xaml;Views\ChooseProfileView.xaml;Views\ConfirmView.xaml;Views\MainWindow.xaml;Views\NavigateProfileView.xaml;Views\PageListView.xaml;Views\ProfileView.xaml;
+Views\AddRechnungView.xaml;Views\BulkEditView.xaml;Views\MainWindow.xaml;Views\NavigateProfileView.xaml;Views\PageListView.xaml;Views\ProfileView.xaml;
 
 False
 

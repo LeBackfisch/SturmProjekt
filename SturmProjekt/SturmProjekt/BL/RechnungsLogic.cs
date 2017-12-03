@@ -91,6 +91,7 @@ namespace SturmProjekt.BL
             int bytes = bmp1.Width * bmp1.Height * (Image.GetPixelFormatSize(bmp1.PixelFormat) / 8);
 
             bool result = true;
+            int difference = 0;
             byte[] b1bytes = new byte[bytes];
             byte[] b2bytes = new byte[bytes];
 
@@ -105,14 +106,57 @@ namespace SturmProjekt.BL
                 if (b1bytes[n] != b2bytes[n])
                 {
                     result = false;
-                    break;
+                   // break;
+                    difference++;
                 }
             }
 
             bmp1.UnlockBits(bitmapData1);
             bmp2.UnlockBits(bitmapData2);
 
+
             return result;
         }
+
+        public bool Equals(Bitmap bmp1, Bitmap bmp2)
+        {
+            if (!bmp1.Size.Equals(bmp2.Size))
+            {
+                return false;
+            }
+            for (int x = 0; x < bmp1.Width; ++x)
+            {
+                for (int y = 0; y < bmp1.Height; ++y)
+                {
+                    if (bmp1.GetPixel(x, y) != bmp2.GetPixel(x, y))
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        public bool difference(Bitmap bmp1, Bitmap bmp2)
+        {
+            if (bmp1.Size != bmp2.Size)
+            {
+                return false;
+            }
+
+            float diff = 0;
+
+            for (int y = 0; y < bmp1.Height; y++)
+            {
+                for (int x = 0; x < bmp1.Width; x++)
+                {
+                    diff += (float)Math.Abs(bmp1.GetPixel(x, y).R - bmp2.GetPixel(x, y).R) / 255;
+                    diff += (float)Math.Abs(bmp1.GetPixel(x, y).G - bmp2.GetPixel(x, y).G) / 255;
+                    diff += (float)Math.Abs(bmp1.GetPixel(x, y).B - bmp2.GetPixel(x, y).B) / 255;
+                }
+            }
+            return false;
+        }
+
     }
 }

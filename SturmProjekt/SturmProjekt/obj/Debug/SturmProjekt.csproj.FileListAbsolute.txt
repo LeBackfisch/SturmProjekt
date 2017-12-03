@@ -71,11 +71,8 @@ I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\Prism.Unity.
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\Prism.Wpf.xml
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\Spire.License.xml
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\Spire.Pdf.xml
-I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\SturmProjekt.csprojResolveAssemblyReference.cache
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\AddRechnungView.baml
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\AddRechnungView.g.cs
-I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\ChooseProfileView.g.cs
-I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\ConfirmView.g.cs
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\MainWindow.g.cs
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\PageListView.g.cs
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\ProfileView.g.cs
@@ -83,8 +80,6 @@ I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\App.g.cs
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\GeneratedInternalTypeHelper.g.cs
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\SturmProjekt_MarkupCompile.cache
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\SturmProjekt_MarkupCompile.lref
-I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\ChooseProfileView.baml
-I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\ConfirmView.baml
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\MainWindow.baml
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\PageListView.baml
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\ProfileView.baml
@@ -98,3 +93,5 @@ I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\Newtonsoft.J
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\Newtonsoft.Json.xml
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\NavigateProfileView.baml
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\NavigateProfileView.g.cs
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\BulkEditView.g.cs
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\BulkEditView.baml
