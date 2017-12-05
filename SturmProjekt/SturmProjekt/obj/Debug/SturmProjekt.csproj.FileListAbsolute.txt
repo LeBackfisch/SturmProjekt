@@ -95,3 +95,12 @@ I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\Naviga
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\NavigateProfileView.g.cs
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\BulkEditView.g.cs
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\BulkEditView.baml
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\SturmProjekt.csprojResolveAssemblyReference.cache
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\x64\liblept1742.dll
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\x64\libtesseract3051.dll
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\x86\liblept1742.dll
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\x86\libtesseract3051.dll
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\Tesseract.dll
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\tessnet2_32.dll
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\Tesseract.xml
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\SturmProjekt_Content.g.cs

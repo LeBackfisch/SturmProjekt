@@ -5,6 +5,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Media.Imaging;
 using Newtonsoft.Json;
 using Spire.Pdf;
@@ -226,17 +227,25 @@ namespace SturmProjekt.BL
             int chosenlogo = -1;
             foreach (var logoBitmap in logoList)
             {
-              /*  if (_rechnungsLogic.Equals(logoBitmap, cutOutBitmaps.First()))
+                /*  if (_rechnungsLogic.Equals(logoBitmap, cutOutBitmaps.First()))
+                  {
+                      chosenlogo = logoindex;
+                  } */
+
+                // logoBitmap.Save(@"I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\Database\logo"+logoindex+".jpg", ImageFormat.Jpeg);
+                // cutOutBitmaps.First().Save(@"I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\Database\compare.jpg", ImageFormat.Jpeg);
+
+                Bitmap bmp1 = _rechnungsLogic.getDifferencBitmap(logoBitmap, cutOutBitmaps.First());
+                if (bmp1 != null)
+                {
+                    bmp1.Save(@"I:\tributes\difference" + logoindex+".jpg", ImageFormat.Jpeg);
+                }
+                
+
+               /* if (_rechnungsLogic.Compare(logoBitmap, cutOutBitmaps.First()))
                 {
                     chosenlogo = logoindex;
                 } */
-
-               // logoBitmap.Save(@"I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\Database\logo"+logoindex+".jpg", ImageFormat.Jpeg);
-               // cutOutBitmaps.First().Save(@"I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\Database\compare.jpg", ImageFormat.Jpeg);
-                if (_rechnungsLogic.difference(logoBitmap, cutOutBitmaps.First()))
-                {
-                    chosenlogo = logoindex;
-                }
 
             /*    if (_rechnungsLogic.CompareBitmapsFast(logoBitmap, cutOutBitmaps.First()))
                 {
@@ -254,7 +263,51 @@ namespace SturmProjekt.BL
                 var category = GetChosenCategory(directories, logoindex);
                 SaveRechnungAsPDF(rechnung, category);
             }
-            
+
+            var values = _rechnungsLogic.GetOcrInfo(cutOutBitmaps);
+            SaveToCsv(values);
+
+        }
+
+        public void SaveToCsv(List<string> values)
+        {
+            var filepath = @"..\..\Database\RechnungsInfos.csv";
+
+            if (File.Exists(filepath))
+            {
+                var line = AddtoCsv(values);
+                File.AppendAllText(filepath, line);
+            }
+            else
+            {
+               CreateCsv(filepath);
+                var line = AddtoCsv(values);
+                File.AppendAllText(filepath, line);
+            }
+        }
+
+        public string AddtoCsv(List<string> values)
+        {
+            var csv = new StringBuilder();
+
+            foreach (var value in values)
+            {
+                csv.Append(value);
+                csv.Append(",");
+            }
+
+            csv.Length--;
+
+            return csv.ToString();
+        }
+
+        public void CreateCsv(string filepath)
+        {
+            using (StreamWriter writer = new StreamWriter(new FileStream(filepath,
+                FileMode.Create, FileAccess.Write)))
+            {
+                writer.WriteLine("Vertragskonto ,Zählpunkt");
+            }
         }
 
         public string GetChosenCategory(List<string> directories, int index)

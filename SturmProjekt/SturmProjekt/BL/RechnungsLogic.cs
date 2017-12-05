@@ -11,6 +11,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using SturmProjekt.Models;
+using tessnet2;
+using System.Drawing.Drawing2D;
 using Image = System.Drawing.Image;
 
 namespace SturmProjekt.BL
@@ -156,6 +158,74 @@ namespace SturmProjekt.BL
                 }
             }
             return false;
+        }
+
+        public List<string> GetOcrInfo(List<Bitmap> infoBitmaps)
+        {
+            var values = new List<string>();
+            infoBitmaps.RemoveAt(0);
+            List<Word> results = new List<Word>();
+
+            foreach (var infoBitmap in infoBitmaps)
+            {
+                var ocr = new tessnet2.Tesseract();
+                ocr.Init(@"I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\Content\tessdata",
+                    "deu", false);
+                var res = ocr.DoOCR(infoBitmap, Rectangle.Empty);
+                results.AddRange(res);
+                
+            }
+
+            foreach (var result in results)
+            {
+                values.Add(result.Text);
+            }
+
+            return values;
+        }
+
+        public bool Compare(Bitmap bmp1, Bitmap bmp2)
+        {
+            bool same = true;
+
+            //Test to see if we have the same size of image
+            if (bmp1.Size != bmp2.Size)
+            {
+                same = false;
+            }
+            else
+            {
+                //Sizes are the same so start comparing pixels
+                for (int x = 0; x < bmp1.Width && same.Equals(true); x++)
+                {
+                    for (int y = 0; y < bmp1.Height && same.Equals(true); y++)
+                    {
+                        if (bmp1.GetPixel(x, y) != bmp2.GetPixel(x, y))
+                            same =false;
+                    }
+                }
+            }
+            return same;
+        }
+
+        public Bitmap getDifferencBitmap(Bitmap bmp1, Bitmap bmp2)
+        {
+            Size s1 = bmp1.Size;
+            Size s2 = bmp2.Size;
+            if (s1 != s2) return null;
+
+
+            Bitmap bmp3 = new Bitmap(s1.Width, s1.Height);
+
+            for (int y = 0; y < s1.Height; y++)
+            for (int x = 0; x < s1.Width; x++)
+            {
+                Color c1 = bmp1.GetPixel(x, y);
+                Color c2 = bmp2.GetPixel(x, y);
+                if (c1 == c2) bmp3.SetPixel(x, y, c1);
+                else bmp3.SetPixel(x, y, Color.Red);
+            }
+            return bmp3;
         }
 
     }
