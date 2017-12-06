@@ -1,23 +1,51 @@
 {
-"Name":"TestWienEnergie",
+"Name":"WienEnergieMusterProfil",
 "PageCount":"3",
 "Pages":[
 			{
 			"DrawLines": 
 				[
+				
 					{
 						"X":1600,
 						"Y":150,
 						"Width":700,
-						"Height":200
-						
+						"Height":200	
 					},
 					
 					{
-						"X":1780,
-						"Y":990,
-						"Width":300,
-						"Height":70
+						"X":220,
+						"Y":680,
+						"Width":400,
+						"Height":300
+					},
+					
+					{
+						"X":200,
+						"Y":1280,
+						"Width":1700,
+						"Height":100
+					},
+					
+					{
+						"X":850,
+						"Y":1450,
+						"Width":500,
+						"Height":100
+					},
+					
+					{
+						"X":200,
+						"Y":1530,
+						"Width":1700,
+						"Height":170
+					},
+					
+					{
+						"X":200,
+						"Y":1700,
+						"Width":1700,
+						"Height":170
 					}
 					
 				]	
@@ -26,10 +54,22 @@
 			"DrawLines": 
 				[
 					{
-						"X":500,
-						"Y":470,
-						"Width":770,
-						"Height":70
+						"X":200,
+						"Y":200,
+						"Width":1100,
+						"Height":500
+						
+					}
+				]	
+			},
+			{
+			"DrawLines": 
+				[
+					{
+						"X":200,
+						"Y":200,
+						"Width":1100,
+						"Height":500
 						
 					}
 				]	
