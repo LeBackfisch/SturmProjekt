@@ -137,7 +137,8 @@ namespace SturmProjekt.ViewModels
                     PictureModels.AddRange(pictures);
                     if (CurrentPage == null)
                     {
-                        RechnungsName = _bl.GetFileNameFromFilePath(pictures.First().FileName);
+                        var filename = _bl.GetFileNameFromFilePath(pictures.First().FileName);
+                        RechnungsName = filename.Split('.')[0];
                     }
 
                 }
@@ -148,7 +149,8 @@ namespace SturmProjekt.ViewModels
                     PictureModels.Add(picture);
                     if(CurrentPage == null)
                     {
-                        RechnungsName = _bl.GetFileNameFromFilePath(picture.FileName);
+                        var filename = _bl.GetFileNameFromFilePath(picture.FileName);
+                        RechnungsName = filename.Split('.')[0];
                     }
                 }
 

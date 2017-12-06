@@ -13,6 +13,7 @@ using System.Windows.Controls;
 using SturmProjekt.Models;
 using tessnet2;
 using System.Drawing.Drawing2D;
+using System.Windows.Documents;
 using Image = System.Drawing.Image;
 
 namespace SturmProjekt.BL
@@ -172,13 +173,19 @@ namespace SturmProjekt.BL
                 ocr.Init(@"I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\Content\tessdata",
                     "deu", false);
                 var res = ocr.DoOCR(infoBitmap, Rectangle.Empty);
-                results.AddRange(res);
-                
-            }
 
-            foreach (var result in results)
-            {
-                values.Add(result.Text);
+                var builder = new StringBuilder();
+
+                foreach (var re in res)
+                {
+                    builder.Append(re.Text);
+                    builder.Append(" ");
+                }
+
+                var value = builder.ToString();
+                value = value.Replace(',', '.');
+                values.Add(value);
+                
             }
 
             return values;
@@ -226,6 +233,69 @@ namespace SturmProjekt.BL
                 else bmp3.SetPixel(x, y, Color.Red);
             }
             return bmp3;
+        }
+
+        public void BitmapComparison(Bitmap first, Bitmap second)
+        {
+            Size s1 = first.Size;
+            Size s2 = second.Size;
+
+            Bitmap f1 = new Bitmap(first, first.Width/4, first.Height/4);
+            Bitmap f2 = new Bitmap(second, second.Width / 4, second.Height / 4);
+
+
+            if (s1 == s2)
+            {
+                int DiferentPixels = 0;
+                Bitmap container = new Bitmap(first.Width, first.Height);
+                for (int i = 0; i < f1.Width; i++)
+                {
+                    for (int j = 0; j < f1.Height; j++)
+                    {
+                        Color secondColor = f2.GetPixel(i, j);
+                        Color firstColor = f1.GetPixel(i, j);
+
+                        if (firstColor != secondColor)
+                        {
+                            DiferentPixels++;
+                            container.SetPixel(i, j, Color.Red);
+                        }
+                        else
+                        {
+                            container.SetPixel(i, j, firstColor);
+                        }
+                    }
+                }
+                int TotalPixels = f1.Width * f1.Height;
+                float dierence = (float)((float)DiferentPixels / (float)TotalPixels);
+                float percentage = dierence * 100;
+
+                container.Save(@"I:\tributes\difference.jpg", ImageFormat.Jpeg);
+            } 
+
+            
+        }
+
+        public float Test(Bitmap img1, Bitmap img2)
+        {
+
+            if (img1.Size == img2.Size)
+            {
+                float diff = 0;
+
+                for (int y = 0; y < img1.Height; y++)
+                {
+                    for (int x = 0; x < img1.Width; x++)
+                    {
+                        diff += (float)Math.Abs(img1.GetPixel(x, y).R - img2.GetPixel(x, y).R) / 255;
+                        diff += (float)Math.Abs(img1.GetPixel(x, y).G - img2.GetPixel(x, y).G) / 255;
+                        diff += (float)Math.Abs(img1.GetPixel(x, y).B - img2.GetPixel(x, y).B) / 255;
+                    }
+                }
+
+                return (100 * diff / (img1.Width * img1.Height * 3));
+            }
+            return 100.0f;
         }
 
     }

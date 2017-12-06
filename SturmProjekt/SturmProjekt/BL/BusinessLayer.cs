@@ -217,45 +217,27 @@ namespace SturmProjekt.BL
             List<Bitmap> logoList = new List<Bitmap>();
             foreach (var directory in directories)
             {
-                var logo = directory + "\\logo.jpg";
-                if (File.Exists(logo))
+                if (!directory.EndsWith("_Undefined"))
                 {
-                    logoList.Add(ConvertImageToBitmap(logo));
-                }
+                    var logo = directory + "\\logo.jpg";
+                    if (File.Exists(logo))
+                    {
+                        logoList.Add(ConvertImageToBitmap(logo));
+                    }
+                }           
             }
             int logoindex = 0;
             int chosenlogo = -1;
             foreach (var logoBitmap in logoList)
             {
-                /*  if (_rechnungsLogic.Equals(logoBitmap, cutOutBitmaps.First()))
-                  {
-                      chosenlogo = logoindex;
-                  } */
-
-                // logoBitmap.Save(@"I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\Database\logo"+logoindex+".jpg", ImageFormat.Jpeg);
-                // cutOutBitmaps.First().Save(@"I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\Database\compare.jpg", ImageFormat.Jpeg);
-
-                Bitmap bmp1 = _rechnungsLogic.getDifferencBitmap(logoBitmap, cutOutBitmaps.First());
-                if (bmp1 != null)
-                {
-                    bmp1.Save(@"I:\tributes\difference" + logoindex+".jpg", ImageFormat.Jpeg);
-                }
                 
-
-               /* if (_rechnungsLogic.Compare(logoBitmap, cutOutBitmaps.First()))
+                var difference = _rechnungsLogic.Test(logoBitmap, cutOutBitmaps.First());
+                if (difference <= 20.0f)
                 {
                     chosenlogo = logoindex;
-                } */
+                    break;
+                }
 
-            /*    if (_rechnungsLogic.CompareBitmapsFast(logoBitmap, cutOutBitmaps.First()))
-                {
-                    chosenlogo = logoindex;
-                }  */
-
-                /*   if (_rechnungsLogic.CompareBitmaps(logoBitmap, cutOutBitmaps.First()))
-                   {
-                       chosenlogo = logoindex;
-                   } */
                 logoindex++;
             }
             if (chosenlogo != -1)
@@ -263,6 +245,13 @@ namespace SturmProjekt.BL
                 var category = GetChosenCategory(directories, logoindex);
                 SaveRechnungAsPDF(rechnung, category);
             }
+            else
+            {
+                var category = directories.Last();
+                SaveRechnungAsPDF(rechnung, category);
+            }
+            
+            
 
             var values = _rechnungsLogic.GetOcrInfo(cutOutBitmaps);
             SaveToCsv(values);
@@ -306,7 +295,7 @@ namespace SturmProjekt.BL
             using (StreamWriter writer = new StreamWriter(new FileStream(filepath,
                 FileMode.Create, FileAccess.Write)))
             {
-                writer.WriteLine("Vertragskonto ,Zählpunkt");
+                writer.WriteLine("Vertragspartnerinfos, Anlagenadresse, Zeitraum, Gaskosten, Stromkosten, Gasdetailinfos, Stromdetailinfos");
             }
         }
 
@@ -326,13 +315,17 @@ namespace SturmProjekt.BL
                 float widthFitRate = image.PhysicalDimension.Width / page.Canvas.ClientSize.Width;
                 float heightFitRate = image.PhysicalDimension.Height / page.Canvas.ClientSize.Height;
                 float fitRate = Math.Max(widthFitRate, heightFitRate);
-                float fitWidth = image.PhysicalDimension.Width / fitRate;
-                float fitHeight = image.PhysicalDimension.Height / fitRate;
 
                 page.Canvas.DrawImage(image, 0, 0, page.Canvas.ClientSize.Width, page.Canvas.ClientSize.Height);
             }
-           
-            doc.SaveToFile(DataPath+"\\"+category+"\\"+rechnung.Name+".pdf");
+            var sb = new StringBuilder();
+            sb.Append(category);
+            sb.Append("\\");
+            sb.Append(rechnung.Name);
+            sb.Append(".pdf");
+            var savepath = sb.ToString();
+
+            doc.SaveToFile(savepath);
             doc.Close();
         }
 
@@ -344,7 +337,7 @@ namespace SturmProjekt.BL
             {
                 if (file.FileName.EndsWith(".pdf"))
                 {
-                   var bitmaps = GetBitMapFromPDF(GetPdfDocument(file.FilePath));
+                   var bitmaps = GetBitMapFromPDF(GetPdfDocument(file.FilePath+"\\"+file.FileName));
                    List<PictureModel> pages = new List<PictureModel>();
                     foreach (var bitmap in bitmaps)
                     {
@@ -359,6 +352,7 @@ namespace SturmProjekt.BL
                     rechnung.Pages = pages;
                     rechnung.Name = pages.First().FileName;
                     rechnung.PageCount = pages.Count;
+                    pdfRechnungen.Add(rechnung);
                 }
                 else
                 {
@@ -377,7 +371,7 @@ namespace SturmProjekt.BL
 
         public void MoveUnidentifiedImages(List<FileModel> files)
         {
-            
+           
         }
 
     }
