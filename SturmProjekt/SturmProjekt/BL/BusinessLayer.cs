@@ -321,13 +321,16 @@ namespace SturmProjekt.BL
             foreach (var rechnungPage in rechnung.Pages)
             {
                 PdfPageBase page = doc.Pages.Add();
+                PdfTemplate template = new PdfTemplate(PdfPageSize.A4);
                 PdfImage image = PdfImage.FromImage(rechnungPage.Page);
 
-                float widthFitRate = image.PhysicalDimension.Width / page.Canvas.ClientSize.Width;
-                float heightFitRate = image.PhysicalDimension.Height / page.Canvas.ClientSize.Height;
-                float fitRate = Math.Max(widthFitRate, heightFitRate);
+                template.Graphics.DrawImage(image, 100, 100);
 
-                page.Canvas.DrawImage(image, 0, 0, page.Canvas.ClientSize.Width, page.Canvas.ClientSize.Height);
+                  page.Canvas.DrawImage(image, 0, 0, page.Canvas.ClientSize.Width, page.Canvas.ClientSize.Height);
+               // page.BackgroundImage = rechnungPage.Page;
+               // page.BackgroudOpacity = 1;
+
+              
             }
             var sb = new StringBuilder();
             sb.Append(category);
@@ -342,7 +345,6 @@ namespace SturmProjekt.BL
 
         public void SortDirectoryFiles(List<FileModel> fileModels, ProfileModel selectedProfile)
         {
-            List<RechnungsModel> pdfRechnungen = new List<RechnungsModel>();
             List<FileModel> imageFiles = new List<FileModel>();
             foreach (var file in fileModels)
             {
@@ -353,7 +355,8 @@ namespace SturmProjekt.BL
                     foreach (var bitmap in bitmaps)
                     {
                         PictureModel pictureModel = new PictureModel();
-                        pictureModel.FileName = file.FileName;
+                        var filename = file.FileName.Split('.')[0];
+                        pictureModel.FileName = filename;
                         pictureModel.Page = ResizeBitmap(bitmap);
                         pictureModel.PageImage = BitmapToImageSource(pictureModel.Page);
                         pages.Add(pictureModel);
@@ -379,6 +382,20 @@ namespace SturmProjekt.BL
         public void MoveUnidentifiedImages(List<FileModel> files)
         {
            
+        }
+
+        public void SortSammelPDF(string filename, ProfileModel selectedprofile)
+        {
+            var pdf = GetPdfDocument(filename);
+            var rechnung = new RechnungsModel();
+            var firstpage = pdf.SaveAsImage(0);
+            var firstpagebmp = new Bitmap(firstpage);
+            
+            /* TODO: erste page nachschauen um welchen Rechnungstyp es sich handelt.
+             * TODO: dann für jede weitere page nachschauen ob es sich um den selben Rechnungstyp handelt, 
+             * TODO: wenn ja, dann Rechnung fertigstellen und cutoutbitmaps ausführen für CSV-Daten ...
+             */ 
+
         }
 
     }

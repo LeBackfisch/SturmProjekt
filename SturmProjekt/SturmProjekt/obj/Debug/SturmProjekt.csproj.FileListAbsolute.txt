@@ -104,3 +104,5 @@ I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\tessnet2_32.
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\Tesseract.xml
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\SturmProjekt_Content.g.cs
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\SturmProjekt.csprojResolveAssemblyReference.cache
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\SammelPDFView.baml
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\SammelPDFView.g.cs

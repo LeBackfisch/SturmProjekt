@@ -121,6 +121,7 @@
     <Compile Include="ViewModels\NavigateProfileViewModel.cs" />
     <Compile Include="ViewModels\PageListViewModel.cs" />
     <Compile Include="ViewModels\ProfileViewModel.cs" />
+    <Compile Include="ViewModels\SammelPDFViewModel.cs" />
     <Compile Include="Views\AddRechnungView.xaml.cs">
       <DependentUpon>AddRechnungView.xaml</DependentUpon>
     </Compile>
@@ -135,6 +136,9 @@
     </Compile>
     <Compile Include="Views\ProfileView.xaml.cs">
       <DependentUpon>ProfileView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SammelPDFView.xaml.cs">
+      <DependentUpon>SammelPDFView.xaml</DependentUpon>
     </Compile>
     <Page Include="Views\AddRechnungView.xaml">
       <SubType>Designer</SubType>
@@ -165,6 +169,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ProfileView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SammelPDFView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
