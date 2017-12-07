@@ -84,8 +84,11 @@ namespace SturmProjekt.BL
             int maxWidth = 2480;
             double ratio = (double) originalBitmap.Width / (double) originalBitmap.Height;
 
-            return new Bitmap(originalBitmap, maxWidth, maxHeight);
-           
+            var resiedbitmap = new Bitmap(originalBitmap, maxWidth, maxHeight);
+            originalBitmap.Dispose();
+            return resiedbitmap;
+
+
         }
 
         public BitmapImage BitmapToImageSource(Bitmap bitmap)
@@ -255,7 +258,15 @@ namespace SturmProjekt.BL
 
             var values = _rechnungsLogic.GetOcrInfo(cutOutBitmaps);
             SaveToCsv(values);
+            DisposeBitMaps(rechnung);
+        }
 
+        public void DisposeBitMaps(RechnungsModel rechnung)
+        {
+            foreach (var page in rechnung.Pages)
+            {
+                page.Page.Dispose();
+            }
         }
 
         public void SaveToCsv(List<string> values)
@@ -352,17 +363,13 @@ namespace SturmProjekt.BL
                     rechnung.Pages = pages;
                     rechnung.Name = pages.First().FileName;
                     rechnung.PageCount = pages.Count;
-                    pdfRechnungen.Add(rechnung);
+                    CutOutBitmaps(rechnung, selectedProfile);
+                    DisposeBitMaps(rechnung);
                 }
                 else
                 {
                     imageFiles.Add(file);
                 }         
-            }
-
-            foreach (var rechnung in pdfRechnungen)
-            {
-                CutOutBitmaps(rechnung, selectedProfile);
             }
 
             MoveUnidentifiedImages(imageFiles);
