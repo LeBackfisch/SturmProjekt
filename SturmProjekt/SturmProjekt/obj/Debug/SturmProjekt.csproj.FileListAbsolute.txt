@@ -106,3 +106,9 @@ I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\SturmProjekt
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\SturmProjekt.csprojResolveAssemblyReference.cache
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\SammelPDFView.baml
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\SammelPDFView.g.cs
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\PdfSharp-wpf.dll
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\PdfSharp.Charting-wpf.dll
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\PdfSharp-wpf.xml
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\PdfSharp.Charting-wpf.xml
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\de\PdfSharp-wpf.resources.dll
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\de\PdfSharp.Charting-wpf.resources.dll
