@@ -112,3 +112,9 @@ I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\PdfSharp-wpf
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\PdfSharp.Charting-wpf.xml
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\de\PdfSharp-wpf.resources.dll
 I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\de\PdfSharp.Charting-wpf.resources.dll
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\AForge.dll
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\AForge.Imaging.dll
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\AForge.Math.dll
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\AForge.xml
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\AForge.Imaging.xml
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\AForge.Math.xml

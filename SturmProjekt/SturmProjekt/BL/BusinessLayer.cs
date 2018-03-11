@@ -7,6 +7,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Media.Imaging;
+using AForge;
+using AForge.Imaging;
+using AForge.Imaging.Filters;
+using AForge.Math.Geometry;
 using Newtonsoft.Json;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
@@ -14,8 +18,10 @@ using Spire.Pdf;
 using Spire.Pdf.Graphics;
 using SturmProjekt.Models;
 using Brushes = System.Drawing.Brushes;
+using Image = System.Drawing.Image;
 using PdfDocument = Spire.Pdf.PdfDocument;
 using Pen = System.Drawing.Pen;
+using Point = System.Drawing.Point;
 
 namespace SturmProjekt.BL
 {
@@ -193,18 +199,21 @@ namespace SturmProjekt.BL
             Graphics g = Graphics.FromImage(bitmap);
 
             List<LinesModel> lines = profilePage.DrawLines;
+            Pen redPen = new Pen(Brushes.Red, 5);
 
             foreach (var line in lines)
             {
                 g.SmoothingMode = SmoothingMode.AntiAlias;
                 g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                 g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                Pen redPen = new Pen(Brushes.Red, 5);
+                
                 redPen.Alignment = PenAlignment.Outset;
                 g.DrawRectangle(redPen,
                     new Rectangle(line.X, line.Y, line.Width, line.Height));
             }        
+            redPen.Dispose();
             g.Flush();
+            g.Dispose();
 
             return bitmap;
         }
@@ -213,6 +222,8 @@ namespace SturmProjekt.BL
         {
             var bitmaps = new List<Bitmap>();
             var pages = rechnung.Pages;
+            int moveX = profile.Pages.FirstOrDefault().DrawLines.FirstOrDefault().X;
+            int moveY = profile.Pages.FirstOrDefault().DrawLines.FirstOrDefault().Y;
             
             foreach (var page in pages)
             {
@@ -221,20 +232,36 @@ namespace SturmProjekt.BL
             List<Bitmap> cutOutBitmaps = _rechnungsLogic.GetCutOutBitmaps(bitmaps, profile.Pages);
             List<string> directories = _rechnungsLogic.GetCategoryDirectories(DataPath);
 
-            List<Bitmap> logoList = GetLogos();
+            List<Rectangle> rectangles = GetRectangles(cutOutBitmaps);
+
            
+
+            List<Bitmap> logoList = GetLogos();
             int logoindex = 0;
             int chosenlogo = -1;
-            foreach (var logoBitmap in logoList)
+            foreach (var logo in logoList)
             {
-                
-                var difference = _rechnungsLogic.Test(logoBitmap, cutOutBitmaps.First());
-                if (difference <= 20.0f)
+                foreach (var rectangle in rectangles)
                 {
-                    chosenlogo = logoindex;
-                    break;
-                }
+                    if (logo.Width == rectangle.Width && logo.Height == rectangle.Height)
+                    {
+                        Bitmap cutBitmap = cutOutBitmaps.FirstOrDefault();
+                        PixelFormat format = cutBitmap.PixelFormat;
+                        Bitmap cutlogo = cutBitmap.Clone(rectangle, format);
+                        moveX += rectangle.X;
+                        moveY += rectangle.Y;
 
+                        var difference = _rechnungsLogic.Test(logo, cutlogo);
+                        if (difference <= 5.0f)
+                        {
+                            chosenlogo = logoindex;
+                            break;
+                        }
+                    }
+
+                }
+                if (chosenlogo != -1)
+                    break;
                 logoindex++;
             }
             if (chosenlogo != -1)
@@ -247,12 +274,50 @@ namespace SturmProjekt.BL
                 var category = directories.Last();
                 SaveRechnungAsPDF(rechnung, category);
             }
-            
-            
 
-            var values = _rechnungsLogic.GetOcrInfo(cutOutBitmaps);
+            var values = _rechnungsLogic.GetOcrInfo(cutOutBitmaps, moveX, moveY);
             SaveToCsv(values);
             DisposeBitMaps(rechnung);
+            DisposeBitMaps(bitmaps);
+            GC.Collect();
+        }
+
+        private List<Rectangle> GetRectangles(List<Bitmap> bitmaps)
+        {
+            Bitmap bitmap = bitmaps.FirstOrDefault();
+            Rectangle rect = new Rectangle(0,0, bitmap.Width, bitmap.Height);
+            PixelFormat format = bitmap.PixelFormat;
+            var usedrect = bitmap.Clone(rect, format);
+
+            BitmapData bitmapData = usedrect.LockBits(
+                new Rectangle(0, 0, bitmap.Width, bitmap.Height),
+                ImageLockMode.ReadWrite, bitmap.PixelFormat);
+
+            ColorFiltering colorFilter = new ColorFiltering();
+
+            colorFilter.Red = new IntRange(0, 250);
+            colorFilter.Green = new IntRange(0, 250);
+            colorFilter.Blue = new IntRange(0, 250);
+            colorFilter.FillOutsideRange = false;
+
+            colorFilter.ApplyInPlace(bitmapData);
+          
+            // locate objects using blob counter
+            BlobCounter blobCounter = new BlobCounter();
+            blobCounter.ProcessImage(bitmapData);
+            Blob[] blobs = blobCounter.GetObjectsInformation();
+            usedrect.UnlockBits(bitmapData);
+            
+            List<Rectangle> rectangles = new List<Rectangle>();
+            foreach (var blob in blobs)
+            {
+                rectangles.Add(blob.Rectangle);
+            }
+            
+          
+
+            //bitmap.Dispose();
+            return rectangles;
         }
 
         public List<Bitmap> GetLogos()
@@ -279,6 +344,14 @@ namespace SturmProjekt.BL
             foreach (var page in rechnung.Pages)
             {
                 page.Page.Dispose();
+            }
+        }
+
+        private void DisposeBitMaps(List<Bitmap> bitmaps)
+        {
+            foreach (var bitmap in bitmaps)
+            {
+                bitmap.Dispose();
             }
         }
 
@@ -379,6 +452,7 @@ namespace SturmProjekt.BL
                     rechnung.Name = pages.First().FileName;
                     rechnung.PageCount = pages.Count;
                     CutOutBitmaps(rechnung, selectedProfile);
+                    DisposeBitMaps(bitmaps);
                     DisposeBitMaps(rechnung);
                 }
                 else
@@ -393,7 +467,10 @@ namespace SturmProjekt.BL
 
         public void MoveUnidentifiedImages(List<FileModel> files)
         {
-           
+            foreach (var file in files)
+            {
+                System.IO.File.Move(file.FilePath+file.FileName, @"I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\Database\_Undefined\"+file.FileName);
+            }
         }
 
         public void SortSammelPDF(string filename, ProfileModel selectedprofile)

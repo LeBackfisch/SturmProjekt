@@ -161,18 +161,37 @@ namespace SturmProjekt.BL
             return false;
         }
 
-        public List<string> GetOcrInfo(List<Bitmap> infoBitmaps)
+        private List<Bitmap> CropBitMaps(List<Bitmap> bitmaps, int x, int y)
+        {
+            List<Bitmap> CorrectedBitmaps = new List<Bitmap>();
+            foreach (var bitmap in bitmaps)
+            {
+                Rectangle rectangle = new Rectangle(x, y, bitmap.Width, bitmap.Height);
+                PixelFormat format = bitmap.PixelFormat;
+                Bitmap correctedBitmap = bitmap.Clone(rectangle, format);
+                CorrectedBitmaps.Add(correctedBitmap);
+                bitmap.Dispose();
+            }
+            GC.Collect();
+            return new List<Bitmap>();
+        }
+
+        public List<string> GetOcrInfo(List<Bitmap> infoBitmaps, int x, int y)
         {
             var values = new List<string>();
+            List<Bitmap> CorrectedBitmaps = new List<Bitmap>();
             infoBitmaps.RemoveAt(0);
-            List<Word> results = new List<Word>();
 
-            foreach (var infoBitmap in infoBitmaps)
+            CorrectedBitmaps = CropBitMaps(infoBitmaps, x, y);
+            int i = 0;
+            
+            foreach (var correctedBitmap in CorrectedBitmaps)
             {
+                correctedBitmap.Save("test"+i+".jpg", ImageFormat.Jpeg);
                 var ocr = new tessnet2.Tesseract();
                 ocr.Init(@"I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\Content\tessdata",
                     "deu", false);
-                var res = ocr.DoOCR(infoBitmap, Rectangle.Empty);
+                var res = ocr.DoOCR(correctedBitmap, Rectangle.Empty);
 
                 var builder = new StringBuilder();
 
@@ -185,7 +204,7 @@ namespace SturmProjekt.BL
                 var value = builder.ToString();
                 value = value.Replace(',', '.');
                 values.Add(value);
-                
+                i++;
             }
 
             return values;
