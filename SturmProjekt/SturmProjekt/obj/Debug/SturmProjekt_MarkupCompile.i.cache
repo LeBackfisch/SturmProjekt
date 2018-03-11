@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\
+D:\FH\SEM 5\SturmProjekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\
 SturmProjekt
 none
 false
 DEBUG;TRACE
-I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\App.xaml
-7-789926054
+D:\FH\SEM 5\SturmProjekt\SturmProjekt\SturmProjekt\SturmProjekt\App.xaml
+7612803908
+12-1827394253
+41-1054634042
+87-976467840
+Views\AddRechnungView.xaml;Views\BulkEditView.xaml;Views\MainWindow.xaml;Views\NavigateProfileView.xaml;Views\PageListView.xaml;Views\ProfileView.xaml;Views\SammelPDFView.xaml;
 
-37-542374071
-79-516945012
-Views\AddRechnungView.xaml;Views\ChooseProfileView.xaml;Views\ConfirmView.xaml;Views\MainWindow.xaml;Views\NavigateProfileView.xaml;Views\PageListView.xaml;Views\ProfileView.xaml;
-
-False
+True
 

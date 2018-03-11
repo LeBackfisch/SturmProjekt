@@ -11,7 +11,7 @@ namespace SturmProjekt.BL
     {
         private string _profilePath;
         private string _dataPath;
-
+        private string _tessdataPath;
 
         protected Config()
         {
@@ -43,6 +43,19 @@ namespace SturmProjekt.BL
                 return _dataPath;
             }
             set { _dataPath = value; }
+        }
+
+        public string TessDataPath
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(_tessdataPath))
+                {
+                    _tessdataPath = Properties.Resources.TessDataPath;
+                }
+                return _tessdataPath;
+            }
+            set{ _tessdataPath = value; }
         }
 
         private static Config _instance;
