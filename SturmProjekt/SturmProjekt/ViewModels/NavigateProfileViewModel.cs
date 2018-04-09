@@ -13,6 +13,7 @@ namespace SturmProjekt.ViewModels
         private readonly IEventAggregator _eventAggregator;
         private int _pageCount;
         private int _currentPageNumber;
+        private bool _clearData = false;
 
         public NavigateProfileViewModel(BusinessLayer bl, IEventAggregator eventAggregator)
         {
@@ -25,8 +26,20 @@ namespace SturmProjekt.ViewModels
                 PageCount = rechnung.PageCount;
                 CurrentPageNumber = 1;
             });
+            _eventAggregator.GetEvent<FreeLockEvent>().Subscribe(freeData =>
+            {
+                ClearData = freeData;
+                PageCount = 0;
+                CurrentPageNumber = 0;
+                ClearData = false;
+            });
         }
 
+        private bool ClearData
+        {
+            get => _clearData;
+            set => SetProperty(ref _clearData, value);
+        }
         private bool CanNext()
         {
             return CurrentPageNumber < PageCount && PageCount > 0;

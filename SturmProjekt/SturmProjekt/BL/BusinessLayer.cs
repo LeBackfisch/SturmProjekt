@@ -6,28 +6,25 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using AForge;
 using AForge.Imaging;
 using AForge.Imaging.Filters;
-using AForge.Math.Geometry;
 using Newtonsoft.Json;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
-using Spire.Pdf;
-using Spire.Pdf.Graphics;
 using SturmProjekt.Models;
 using Brushes = System.Drawing.Brushes;
 using Image = System.Drawing.Image;
 using PdfDocument = Spire.Pdf.PdfDocument;
 using Pen = System.Drawing.Pen;
-using Point = System.Drawing.Point;
 
 namespace SturmProjekt.BL
 {
     public class BusinessLayer
     {
-        private RechnungsLogic _rechnungsLogic;
+        private readonly RechnungsLogic _rechnungsLogic;
         private Config _config;
         public BusinessLayer()
         {
@@ -43,15 +40,15 @@ namespace SturmProjekt.BL
             return fileName.EndsWith(".pdf");
         }
 
-        public PdfDocument GetPdfDocument(string filepath)
+        public async Task<PdfDocument> GetPdfDocument(string filepath)
         {
             if (!File.Exists(filepath)) return null;
             var pdf = new PdfDocument();
-            pdf.LoadFromFile(filepath);
+           pdf.LoadFromFile(filepath); 
             return pdf;
         }
 
-        public List<Bitmap> GetBitMapFromPDF(PdfDocument pdf)
+        public async Task<List<Bitmap>> GetBitMapFromPDF(PdfDocument pdf)
         {
           var images = new List<Bitmap>();
             var resizedimages = new List<Bitmap>();
@@ -65,7 +62,7 @@ namespace SturmProjekt.BL
             }
             foreach (var image in images)
             {
-                resizedimages.Add(ResizeBitmap(image));
+                resizedimages.Add(ResizeBitmap(image).Result); 
             }
             return resizedimages;
         } 
@@ -76,7 +73,7 @@ namespace SturmProjekt.BL
             return path.Last();
         }
 
-        public Bitmap ConvertImageToBitmap(string fileName)
+        public async Task<Bitmap> ConvertImageToBitmap(string fileName)
         {
             Bitmap bitmap;
             using (Stream bmpStream = System.IO.File.Open(fileName, System.IO.FileMode.Open))
@@ -88,20 +85,17 @@ namespace SturmProjekt.BL
             return bitmap;
         }
 
-        public Bitmap ResizeBitmap(Bitmap originalBitmap)
+        public async Task<Bitmap> ResizeBitmap(Bitmap originalBitmap)
         {
             int maxHeight = 3508;
             int maxWidth = 2480;
-            double ratio = (double) originalBitmap.Width / (double) originalBitmap.Height;
 
             var resiedbitmap = new Bitmap(originalBitmap, maxWidth, maxHeight);
             originalBitmap.Dispose();
             return resiedbitmap;
-
-
         }
 
-        public BitmapImage BitmapToImageSource(Bitmap bitmap)
+        public async Task<BitmapImage> BitmapToImageSource(Bitmap bitmap)
         {
             using (var memory = new MemoryStream())
             {
@@ -124,8 +118,8 @@ namespace SturmProjekt.BL
 
         public List<ProfileModel> GetProfileList()
         {
-            var ProfileNames = GetProfileFiles();
-            return ParseProfileModel(ProfileNames);
+            var profileNames = GetProfileFiles();
+            return ParseProfileModel(profileNames);
         }
 
         public List<string> GetProfileFiles()
@@ -133,24 +127,15 @@ namespace SturmProjekt.BL
             var list = new List<string>();
             if (!Directory.Exists(FilePath)) return list;
             var d = new DirectoryInfo(FilePath);
-            FileInfo[] Files = d.GetFiles("*.json");
+            FileInfo[] files = d.GetFiles("*.json");
 
-            foreach (var file in Files)
-            {
-                list.Add(file.Name);
-            }
+            list.AddRange(files.Select(file => file.Name));
             return list;
         }
 
-        public List<ProfileModel> ParseProfileModel(List<string> FileNames)
+        public List<ProfileModel> ParseProfileModel(List<string> fileNames)
         {
-            var ProfileList = new List<ProfileModel>();
-            foreach (var file in FileNames)
-            {    
-                 ProfileModel profile = ParseJsonToModel(FilePath + "\\" + file);
-                ProfileList.Add(profile);
-            }
-            return ProfileList;
+            return fileNames.Select(file => ParseJsonToModel(FilePath + "\\" + file)).ToList();
         }
 
         public ProfileModel ParseJsonToModel(string filename)
@@ -161,9 +146,9 @@ namespace SturmProjekt.BL
             return profile;
         }
 
-        public RechnungsModel DrawOnRechnungsModel(RechnungsModel Rechnung, ProfileModel SelectedProfile)
+        public RechnungsModel DrawOnRechnungsModel(RechnungsModel Rechnung, ProfileModel selectedProfile)
         {
-            List<ProfilePages> pages = SelectedProfile.Pages;
+            List<ProfilePages> pages = selectedProfile.Pages;
 
             int index = 0;
 
@@ -178,7 +163,7 @@ namespace SturmProjekt.BL
                 {
                     var bitmap = DrawonBitmap(pictureItem.Page, pages.ElementAt(index));
                     pictureModel.Page = bitmap;
-                    pictureModel.PageImage = BitmapToImageSource(bitmap);
+                    pictureModel.PageImage = BitmapToImageSource(bitmap).Result;
                     pictureModels.Add(pictureModel);
                 }
                 else
@@ -220,7 +205,7 @@ namespace SturmProjekt.BL
             return bitmap;
         }
 
-        public void CutOutBitmaps(RechnungsModel rechnung, ProfileModel profile)
+        public async Task CutOutBitmaps(RechnungsModel rechnung, ProfileModel profile)
         {
             var bitmaps = new List<Bitmap>();
             var pages = rechnung.Pages;
@@ -231,10 +216,10 @@ namespace SturmProjekt.BL
             {
                 bitmaps.Add(page.Page);
             }
-            List<Bitmap> cutOutBitmaps = _rechnungsLogic.GetCutOutBitmaps(bitmaps, profile.Pages);
-            List<string> directories = _rechnungsLogic.GetCategoryDirectories(DataPath);
+            List<Bitmap> cutOutBitmaps = await _rechnungsLogic.GetCutOutBitmaps(bitmaps, profile.Pages);
+            List<string> directories = await _rechnungsLogic.GetCategoryDirectories(DataPath);
 
-            List<Rectangle> rectangles = GetRectangles(cutOutBitmaps);
+            List<Rectangle> rectangles = await GetRectangles(cutOutBitmaps);
 
            
 
@@ -253,13 +238,32 @@ namespace SturmProjekt.BL
                         moveX += rectangle.X;
                         moveY += rectangle.Y;
 
-                        var difference = _rechnungsLogic.Test(logo, cutlogo);
-                        if (difference <= 5.0f)
+                        var difference = await _rechnungsLogic.CalculateDifference(logo, cutlogo);
+                        if (difference <= 7.0f)
                         {
                             chosenlogo = logoindex;
                             break;
                         }
+                        cutlogo.Dispose();
                     }
+                    else if ((logo.Width + (logo.Width * 0.05) > rectangle.Width) &&
+                             (logo.Width - (logo.Width * 0.05) < rectangle.Width) &&
+                             (logo.Height + (logo.Height * 0.05) > rectangle.Height) &&
+                             (logo.Height - (logo.Height * 0.05) < rectangle.Height))
+                    {
+                        Bitmap cutBitmap = cutOutBitmaps.FirstOrDefault();
+                        PixelFormat format = cutBitmap.PixelFormat;
+                        Bitmap cutlogo = cutBitmap.Clone(rectangle, format);
+                        var resizedlogo = new Bitmap(cutlogo, logo.Width, logo.Height);
+                        cutlogo.Dispose();
+                        var difference = await _rechnungsLogic.CalculateDifference(logo, resizedlogo);
+                        if (difference <= 7.0f)
+                        {
+                            chosenlogo = logoindex;
+                            break;
+                        }
+                        resizedlogo.Dispose();
+                    } 
 
                 }
                 if (chosenlogo != -1)
@@ -269,12 +273,12 @@ namespace SturmProjekt.BL
             if (chosenlogo != -1)
             {
                 var category = GetChosenCategory(directories, logoindex);
-                SaveRechnungAsPDF(rechnung, category);
+                await SaveRechnungAsPDF(rechnung, category);
             }
             else
             {
                 var category = directories.Last();
-                SaveRechnungAsPDF(rechnung, category);
+                await SaveRechnungAsPDF(rechnung, category);
             }
 
             var values = _rechnungsLogic.GetOcrInfo(cutOutBitmaps, moveX, moveY, TessDataPath);
@@ -285,7 +289,7 @@ namespace SturmProjekt.BL
             GC.Collect();
         }
 
-        private List<Rectangle> GetRectangles(List<Bitmap> bitmaps)
+        private async Task<List<Rectangle>> GetRectangles(List<Bitmap> bitmaps)
         {
             Bitmap bitmap = bitmaps.FirstOrDefault();
             Rectangle rect = new Rectangle(0,0, bitmap.Width, bitmap.Height);
@@ -296,49 +300,29 @@ namespace SturmProjekt.BL
                 new Rectangle(0, 0, bitmap.Width, bitmap.Height),
                 ImageLockMode.ReadWrite, bitmap.PixelFormat);
 
-            ColorFiltering colorFilter = new ColorFiltering();
+            ColorFiltering colorFilter = new ColorFiltering
+            {
+                Red = new IntRange(0, 250),
+                Green = new IntRange(0, 250),
+                Blue = new IntRange(0, 250),
+                FillOutsideRange = false
+            };
 
-            colorFilter.Red = new IntRange(0, 250);
-            colorFilter.Green = new IntRange(0, 250);
-            colorFilter.Blue = new IntRange(0, 250);
-            colorFilter.FillOutsideRange = false;
-
-            colorFilter.ApplyInPlace(bitmapData);
+            await Task.Run(()=> colorFilter.ApplyInPlace(bitmapData));
           
             // locate objects using blob counter
             BlobCounter blobCounter = new BlobCounter();
             blobCounter.ProcessImage(bitmapData);
             Blob[] blobs = blobCounter.GetObjectsInformation();
             usedrect.UnlockBits(bitmapData);
-            
-            List<Rectangle> rectangles = new List<Rectangle>();
-            foreach (var blob in blobs)
-            {
-                rectangles.Add(blob.Rectangle);
-            }
-            
-          
 
-            //bitmap.Dispose();
-            return rectangles;
+            return blobs.Select(blob => blob.Rectangle).ToList();
         }
 
         public List<Bitmap> GetLogos()
         {
-            List<Bitmap> logoList = new List<Bitmap>();
-            List<string> directories = _rechnungsLogic.GetCategoryDirectories(DataPath);
-            foreach (var directory in directories)
-            {
-                if (!directory.EndsWith("_Undefined"))
-                {
-                    var logo = directory + "\\logo.jpg";
-                    if (File.Exists(logo))
-                    {
-                        logoList.Add(ConvertImageToBitmap(logo));
-                    }
-                }
-            }
-            return logoList;
+            List<string> directories = _rechnungsLogic.GetCategoryDirectories(DataPath).Result;
+            return (from directory in directories where !directory.EndsWith("_Undefined") select directory + "\\logo.jpg" into logo where File.Exists(logo) select ConvertImageToBitmap(logo).Result).ToList();
         }
 
 
@@ -404,7 +388,7 @@ namespace SturmProjekt.BL
             return directories[index];
         }
 
-        public void SaveRechnungAsPDF(RechnungsModel rechnung, string category)
+        public async Task SaveRechnungAsPDF(RechnungsModel rechnung, string category)
         {
             var doc = new PdfSharp.Pdf.PdfDocument();
 
@@ -431,22 +415,24 @@ namespace SturmProjekt.BL
         }
 
 
-        public void SortDirectoryFiles(List<FileModel> fileModels, ProfileModel selectedProfile)
+        public async Task SortDirectoryFiles(List<FileModel> fileModels, ProfileModel selectedProfile)
         {
             List<FileModel> imageFiles = new List<FileModel>();
             foreach (var file in fileModels)
             {
                 if (file.FileName.EndsWith(".pdf"))
-                {
-                   var bitmaps = GetBitMapFromPDF(GetPdfDocument(file.FilePath+"\\"+file.FileName));
+                {  
+                    var pdf = GetPdfDocument((file.FilePath + "\\" + file.FileName)).Result;
+                    var bitmaps = GetBitMapFromPDF(pdf).Result;
+                    pdf.Dispose();
                    List<PictureModel> pages = new List<PictureModel>();
                     foreach (var bitmap in bitmaps)
                     {
                         PictureModel pictureModel = new PictureModel();
                         var filename = file.FileName.Split('.')[0];
                         pictureModel.FileName = filename;
-                        pictureModel.Page = ResizeBitmap(bitmap);
-                        pictureModel.PageImage = BitmapToImageSource(pictureModel.Page);
+                        pictureModel.Page = ResizeBitmap(bitmap).Result;
+                        pictureModel.PageImage = BitmapToImageSource(pictureModel.Page).Result;
                         pages.Add(pictureModel);
                     }
 
@@ -454,7 +440,7 @@ namespace SturmProjekt.BL
                     rechnung.Pages = pages;
                     rechnung.Name = pages.First().FileName;
                     rechnung.PageCount = pages.Count;
-                    CutOutBitmaps(rechnung, selectedProfile);
+                    await CutOutBitmaps(rechnung, selectedProfile);
                     DisposeBitMaps(bitmaps);
                     DisposeBitMaps(rechnung);
                 }
@@ -476,33 +462,66 @@ namespace SturmProjekt.BL
             }
         }
 
-        public void SortSammelPDF(string filename, ProfileModel selectedprofile)
+
+        public async Task SortSammelPDF(string filename, ProfileModel selectedprofile)
         {
-            var pdf = GetPdfDocument(filename);
+            var pdf = GetPdfDocument(filename).Result;
             var rechnung = new RechnungsModel();
             int rechcount = 0;
             var firstpage = pdf.SaveAsImage(0);
+            firstpage.Dispose();
             var firstpagebmp = new Bitmap(firstpage);
-            firstpagebmp = ResizeBitmap(firstpagebmp);
+            firstpagebmp = ResizeBitmap(firstpagebmp).Result;
             var bitmaplist = new List<Bitmap>();
-            bitmaplist.Add(firstpagebmp);
-            List<Bitmap> cutOutBitmaps = _rechnungsLogic.GetCutOutBitmaps(bitmaplist, selectedprofile.Pages);
+            await Task.Run(() => bitmaplist.Add(firstpagebmp));
+            List<Bitmap> cutOutBitmaps = await _rechnungsLogic.GetCutOutBitmaps(bitmaplist, selectedprofile.Pages);
+            List<Rectangle> rectangles = await GetRectangles(cutOutBitmaps);
             List<Bitmap> logoList = GetLogos();
             int chosenlogo = -1;
             int logoindex = 0;
-            List<string> directories = _rechnungsLogic.GetCategoryDirectories(DataPath);
+            List<string> directories = await _rechnungsLogic.GetCategoryDirectories(DataPath);
             string category;
-            foreach (var logoBitmap in logoList)
+            foreach (var logo in logoList)
             {
-
-                var difference = _rechnungsLogic.Test(logoBitmap, cutOutBitmaps.First());
-                if (difference <= 20.0f)
+                foreach (var rectangle in rectangles)
                 {
-                    chosenlogo = logoindex;
-                    break;
-                }
+                    if (logo.Width == rectangle.Width && logo.Height == rectangle.Height)
+                    {
+                        Bitmap cutBitmap = cutOutBitmaps.FirstOrDefault();
+                        PixelFormat format = cutBitmap.PixelFormat;
+                        Bitmap cutlogo = cutBitmap.Clone(rectangle, format);
 
+                        var difference = await _rechnungsLogic.CalculateDifference(logo, cutlogo);
+                        if (difference <= 7.0f)
+                        {
+                            chosenlogo = logoindex;
+                            break;
+                        }
+                        cutlogo.Dispose();
+                    }
+                    else if ((logo.Width + (logo.Width * 0.05) > rectangle.Width) &&
+                             (logo.Width - (logo.Width * 0.05) < rectangle.Width) &&
+                             (logo.Height + (logo.Height * 0.05) > rectangle.Height) &&
+                             (logo.Height - (logo.Height * 0.05) < rectangle.Height))
+                    {
+                        Bitmap cutBitmap = cutOutBitmaps.FirstOrDefault();
+                        PixelFormat format = cutBitmap.PixelFormat;
+                        Bitmap cutlogo = cutBitmap.Clone(rectangle, format);
+                        var resizedlogo = new Bitmap(cutlogo, logo.Width, logo.Height);
+                        cutlogo.Dispose();
+                        var difference = await _rechnungsLogic.CalculateDifference(logo, resizedlogo);
+                        if (difference <= 7.0f)
+                        {
+                            chosenlogo = logoindex;
+                            break;
+                        }
+                        resizedlogo.Dispose();
+                    }
+                }
+                if (chosenlogo != -1)
+                    break;
                 logoindex++;
+
             }
             if (chosenlogo.Equals(-1))
             {
@@ -516,7 +535,7 @@ namespace SturmProjekt.BL
                 var picture = new PictureModel();
                 picture.FileName = filename;
                 picture.Page = firstpagebmp;
-                picture.PageImage = BitmapToImageSource(firstpagebmp);
+                picture.PageImage = BitmapToImageSource(firstpagebmp).Result;
                 rechnung.Pages = new List<PictureModel>();
                 rechnung.Pages.Add(picture);
                 rechnung.PageCount = rechnung.Pages.Count;
@@ -526,25 +545,55 @@ namespace SturmProjekt.BL
             {
                 var page = pdf.SaveAsImage(index);
                 var pagebmp = new Bitmap(page);
-                pagebmp = ResizeBitmap(pagebmp);
-                pagebmp.Save(@"I:\vgames\img" + index + ".jpg", ImageFormat.Jpeg);
+                page.Dispose();
+                pagebmp = ResizeBitmap(pagebmp).Result;
                 var bmplist = new List<Bitmap>();            
                 bmplist.Add(pagebmp);
 
                 int chosen = -1;
                 int logoindx = 0;
-                List<Bitmap> cutout = _rechnungsLogic.GetCutOutBitmaps(bmplist, selectedprofile.Pages);
                 foreach (var logoBitmap in logoList)
                 {
-
-                    var difference = _rechnungsLogic.Test(logoBitmap, cutout.First());
-                    if (difference <= 20.0f)
+                    foreach (var rectangle in rectangles)
                     {
-                        chosen = logoindx;
-                        break;
+                        if (logoBitmap.Width == rectangle.Width && logoBitmap.Height == rectangle.Height)
+                        {
+                            Bitmap cutBitmap = cutOutBitmaps.FirstOrDefault();
+                            PixelFormat format = cutBitmap.PixelFormat;
+                            Bitmap cutlogo = cutBitmap.Clone(rectangle, format);
+
+                            var restDiff = await _rechnungsLogic.CalculateDifference(logoBitmap, cutlogo);
+                            if (restDiff <= 7.0f)
+                            {
+                                chosenlogo = logoindex;
+                                break;
+                            }
+                            cutlogo.Dispose();
+                        }
+                        else if ((logoBitmap.Width + (logoBitmap.Width * 0.05) > rectangle.Width) &&
+                                 (logoBitmap.Width - (logoBitmap.Width * 0.05) < rectangle.Width) &&
+                                 (logoBitmap.Height + (logoBitmap.Height * 0.05) > rectangle.Height) &&
+                                 (logoBitmap.Height - (logoBitmap.Height * 0.05) < rectangle.Height))
+                        {
+                            Bitmap cutBitmap = cutOutBitmaps.FirstOrDefault();
+                            PixelFormat format = cutBitmap.PixelFormat;
+                            Bitmap cutlogo = cutBitmap.Clone(rectangle, format);
+                            var resizedlogo = new Bitmap(cutlogo, logoBitmap.Width, logoBitmap.Height);
+                            cutlogo.Dispose();
+                            var restDiff = await _rechnungsLogic.CalculateDifference(logoBitmap, resizedlogo);
+                            if (restDiff <= 7.0f)
+                            {
+                                chosenlogo = logoindex;
+                                break;
+                            }
+                            resizedlogo.Dispose();
+                        }
+
                     }
 
                     logoindx++;
+                    if (chosenlogo != -1)
+                        break;
                 }
                 if (chosen.Equals(-1))
                 {
@@ -552,7 +601,7 @@ namespace SturmProjekt.BL
                     {
                         FileName = filename,
                         Page = pagebmp,
-                        PageImage = BitmapToImageSource(pagebmp)
+                        PageImage = BitmapToImageSource(pagebmp).Result
                     };
 
                     rechnung.Pages.Add(pic);
@@ -560,7 +609,7 @@ namespace SturmProjekt.BL
                 }
                 else
                 {
-                    SaveRechnungAsPDF(rechnung, category);
+                    await SaveRechnungAsPDF(rechnung, category);
                     DisposeBitMaps(rechnung);
                     rechcount++;
                     rechnung = new RechnungsModel();
@@ -569,7 +618,7 @@ namespace SturmProjekt.BL
                     {
                         FileName = filename,
                         Page = pagebmp,
-                        PageImage = BitmapToImageSource(pagebmp)
+                        PageImage = BitmapToImageSource(pagebmp).Result
                     };
                     rechnung.Pages = new List<PictureModel>();
                     rechnung.Pages.Add(pic);
@@ -580,59 +629,9 @@ namespace SturmProjekt.BL
                 }
 
             }
-
-
-            /* TODO: erste page nachschauen um welchen Rechnungstyp es sich handelt.
-             * TODO: dann für jede weitere page nachschauen ob es sich um den selben Rechnungstyp handelt, 
-             * TODO: wenn ja, dann Rechnung fertigstellen und cutoutbitmaps ausführen für CSV-Daten ...
-             */
+            pdf.Dispose();
 
         }
-
-        public PictureModel CreateFirstPage(Bitmap bitmap, string filename)
-        {
-            var first = new PictureModel();
-            first.Page = ResizeBitmap(bitmap);
-            first.PageImage = BitmapToImageSource(ResizeBitmap(bitmap));
-            first.FileName = filename;
-
-            return first;
-        }
-
-       /* private void AddtoExcelFile(List<string> values)
-        {
-            List<string> buchstaben = new List<string>()
-            {
-                "A","B","C","D","E","F","G",
-            };
-            Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
-
-            try
-            {
-                Microsoft.Office.Interop.Excel.Workbook sheet = excel.Workbooks.Open(DataPath + "\\RechnungsInfos.xlsx");
-                Microsoft.Office.Interop.Excel.Worksheet x = excel.ActiveSheet as Microsoft.Office.Interop.Excel.Worksheet;
-
-                Microsoft.Office.Interop.Excel.Range range = x.UsedRange;
-                var xlRange = (Microsoft.Office.Interop.Excel.Range)x.Cells[x.Rows.Count, 1];
-                long lastRow = (long)xlRange.get_End(Microsoft.Office.Interop.Excel.XlDirection.xlUp).Row;
-                long newRow = lastRow + 1;
-
-                int idx = 0;
-                foreach(var value in values)
-                {
-                    x.Range[buchstaben[idx] + newRow].Value = value;
-                    idx++;
-                }
-
-                sheet.Close(true);
-                excel.Quit();
-            }
-            catch
-            {
-                string failed = "Could not find or open File";
-            }
-           
-        } */
 
     }
 

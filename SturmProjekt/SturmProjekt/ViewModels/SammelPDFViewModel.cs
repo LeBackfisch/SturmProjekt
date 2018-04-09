@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.Win32;
 using Prism.Commands;
@@ -36,9 +32,11 @@ namespace SturmProjekt.ViewModels
             return SelectedProfile != null && !string.IsNullOrWhiteSpace(FileName);
         }
 
-        private void Sort()
+        private async void Sort()
         {
-            _bl.SortSammelPDF(FileName, SelectedProfile);
+            await _bl.SortSammelPDF(FileName, SelectedProfile);
+            SelectedProfile = null;
+            FileName = null;
         }
 
         public string FileName

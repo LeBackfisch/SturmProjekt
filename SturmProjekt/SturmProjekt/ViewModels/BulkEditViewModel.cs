@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
@@ -43,7 +40,11 @@ namespace SturmProjekt.ViewModels
 
         private void Sort()
         {
-            _businessLayer.SortDirectoryFiles(Files, SelectedProfile);
+            Task.Run(() => _businessLayer.SortDirectoryFiles(Files, SelectedProfile));
+            FileCount = 0;
+            FileCountText = null;
+            SelectedProfile = null;
+            Files = new List<FileModel>();
         }
 
         private bool CanOpen()
@@ -59,16 +60,12 @@ namespace SturmProjekt.ViewModels
                 SelectedPath = System.AppDomain.CurrentDomain.BaseDirectory
             };
             var result = open.ShowDialog();
-            if (result == DialogResult.OK)
-            {
-                FileCount = 0;
-                Files = new List<FileModel>();
-                var folderpath = open.SelectedPath;
-                _directory = new DirectoryInfo(folderpath);
-                GetFiles();
-               
-            }
-
+            if (result != DialogResult.OK) return;
+            FileCount = 0;
+            Files = new List<FileModel>();
+            var folderpath = open.SelectedPath;
+            _directory = new DirectoryInfo(folderpath);
+            GetFiles();
         }
 
         public void GetFiles()
@@ -88,40 +85,34 @@ namespace SturmProjekt.ViewModels
             FileCountText = FileCount.ToString();
         }
 
-        public DirectoryInfo Directory
-        {
-            get { return _directory; }
-            set { _directory = value; }
-        }
-
         public List<FileModel> Files
         {
-            get { return _files; }
-            set { _files = value; }
+            get => _files;
+            set => _files = value;
         }
 
         public int FileCount
         {
-            get { return _fileCount; }
-            set { SetProperty(ref _fileCount, value);}
+            get => _fileCount;
+            set => SetProperty(ref _fileCount, value);
         }
 
         public string FileCountText
         {
-            get { return _fileCountText; }
-            set { SetProperty(ref _fileCountText, value); }
+            get => _fileCountText;
+            set => SetProperty(ref _fileCountText, value);
         }
 
         public IEnumerable<ProfileModel> ProfileList
         {
-            get { return _profileList; }
-            set { SetProperty(ref _profileList, value); }
+            get => _profileList;
+            set => SetProperty(ref _profileList, value);
         }
 
         public ProfileModel SelectedProfile
         {
-            get { return _selectedProfile; }
-            set { SetProperty(ref _selectedProfile, value); }
+            get => _selectedProfile;
+            set => SetProperty(ref _selectedProfile, value);
         }
 
         public ICommand ChooseFolderCommand { get; set; }

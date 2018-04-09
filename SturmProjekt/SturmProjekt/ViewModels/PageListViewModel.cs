@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Prism.Events;
 using Prism.Mvvm;
@@ -26,6 +27,7 @@ namespace SturmProjekt.ViewModels
             _eventAggregator.GetEvent<DeletedPageEvent>().Subscribe(page =>
             {
                 CurrentPage = page;
+                GC.Collect();
             });
         }
         

@@ -29,7 +29,7 @@ namespace SturmProjekt.BL
                 }
                 return _profilePath;
             }
-            set { _profilePath = value; }
+            set => _profilePath = value;
         }
 
         public string DataPath
@@ -42,7 +42,7 @@ namespace SturmProjekt.BL
                 }
                 return _dataPath;
             }
-            set { _dataPath = value; }
+            set => _dataPath = value;
         }
 
         public string TessDataPath
@@ -55,7 +55,7 @@ namespace SturmProjekt.BL
                 }
                 return _tessdataPath;
             }
-            set{ _tessdataPath = value; }
+            set => _tessdataPath = value;
         }
 
         private static Config _instance;

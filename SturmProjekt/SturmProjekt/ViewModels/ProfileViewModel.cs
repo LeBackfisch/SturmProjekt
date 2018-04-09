@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Prism.Commands;
 using Prism.Events;
@@ -33,6 +34,7 @@ namespace SturmProjekt.ViewModels
             ProfileList = new ObservableCollection<ProfileModel>(_bl.GetProfileList());
             _eventAggregator = eventAggregator;
             DrawCommand = new DelegateCommand(Draw, CanDraw).ObservesProperty(()=> RechnungsPage).ObservesProperty(() => SelectedProfile);
+            CancelCommand = new DelegateCommand(Cancel, CanCancel).ObservesProperty(() => Rechnung);
             SortRechnungCommnad = new DelegateCommand(Sort, CanSort).ObservesProperty(() => Rechnung).ObservesProperty(() => SelectedProfile);
             _eventAggregator.GetEvent<CreateRechnungEvent>().Subscribe(rechnung =>
             {
@@ -51,6 +53,24 @@ namespace SturmProjekt.ViewModels
 
         }
 
+        private bool CanCancel()
+        {
+            return Rechnung != null;
+        }
+
+        private void Cancel()
+        {
+            Rechnung = null;
+            RechnungWithoutLines = null;
+            foreach (var rechnung in RechnungsList)
+            {
+                rechnung.Page.Dispose();
+            }
+            RechnungsList = null;
+            RechnungsPage = null;
+            _eventAggregator.GetEvent<FreeLockEvent>().Publish(false);
+        }
+
         private bool CanSort()
         {
             return SelectedProfile != null && Rechnung != null;
@@ -58,7 +78,16 @@ namespace SturmProjekt.ViewModels
 
         private void Sort()
         {
-           _bl.CutOutBitmaps(RechnungWithoutLines, SelectedProfile);
+            _bl.CutOutBitmaps(RechnungWithoutLines, SelectedProfile);
+            Rechnung = null;
+            RechnungWithoutLines = null;
+            foreach (var rechnung in RechnungsList)
+            {
+                rechnung.Page.Dispose();
+            }
+            RechnungsList = null;
+            RechnungsPage = null;
+            _eventAggregator.GetEvent<FreeLockEvent>().Publish(false);
         }
 
         private bool CanDraw()
@@ -87,7 +116,6 @@ namespace SturmProjekt.ViewModels
             }
            
         }
-
 
         public RechnungsModel RechnungWithoutLines
         {
@@ -140,13 +168,11 @@ namespace SturmProjekt.ViewModels
             get => _selectedProfile;
             set
             {
-               
                     Rechnung = RechnungWithoutLines;
                     RechnungsList = RechnungWithoutLines.Pages;
                     RechnungsPage = RechnungWithoutLines.Pages[CurrentPageNumber - 1];
                     ButtonText = "Add Lines";
                     _buttonclicked = false;
-                
            
                 SetProperty(ref _selectedProfile, value);
             }
@@ -159,8 +185,8 @@ namespace SturmProjekt.ViewModels
         }
 
         public ICommand DrawCommand { get; set; }
+        public ICommand CancelCommand { get; set; }
         public ICommand SortRechnungCommnad { get; set; }
-        public string FilePath { get; set; }
-        
+           
     }
 }

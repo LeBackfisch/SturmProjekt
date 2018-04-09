@@ -10,7 +10,7 @@ namespace SturmProjekt.Models
 {
     public class RechnungsModel
     {
-        public String Name { get; set; }
+        public string Name { get; set; }
         public int PageCount { get; set; }
         public List<PictureModel> Pages { get; set; }
 

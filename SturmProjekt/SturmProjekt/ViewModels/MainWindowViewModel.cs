@@ -1,4 +1,5 @@
-﻿using Prism.Events;
+﻿using System;
+using Prism.Events;
 using Prism.Mvvm;
 using SturmProjekt.BL;
 using SturmProjekt.Events;
@@ -29,13 +30,17 @@ namespace SturmProjekt.ViewModels
             _eventAggregator.GetEvent<RemovePictureEvent>().Subscribe(page =>
             {
                 if (CurrentPage.FileName == page.FileName)
+                {
+                    CurrentPage.Page.Dispose();
                     CurrentPage = null;
+                    GC.Collect();
+                }
+                    
             });
             _eventAggregator.GetEvent<RechnungsPageEvent>().Subscribe(page =>
             {
                 RechnungsPage = page;
-            });
-            
+            });      
         }
 
         public MainWindowViewModel()

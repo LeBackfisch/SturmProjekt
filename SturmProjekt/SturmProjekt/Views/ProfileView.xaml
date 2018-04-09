@@ -25,6 +25,7 @@
                 </ComboBox.Style>
             </ComboBox>
             <Button Margin="0,10,0,10" Padding="3, 10, 30, 10" Command="{Binding DrawCommand}" Content="{Binding ButtonText}"></Button>
+            <Button Margin="0,10,0,10" Padding="3, 10, 30, 10" Command="{Binding CancelCommand}" Content="Abbrechen"></Button>
             <Button Margin="0,10,0,10" Padding="3, 10, 30, 10" Command="{Binding SortRechnungCommnad}" Content="Rechnung sortieren"></Button>
         </StackPanel>
        

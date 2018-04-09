@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using Microsoft.Win32;
@@ -18,14 +19,15 @@ namespace SturmProjekt.ViewModels
         private List<PictureModel> _pictureModels;
         private PictureModel _currentPage;
         private string _rechnungsName;
+        private bool _lockedEdit = false;
 
         public AddRechnungViewModel(BusinessLayer business, IEventAggregator eventAggregator)
         {
             _bl = business;
             _eventAggregator = eventAggregator;
-            OpenFileCommand = new DelegateCommand(Open, CanOpen);
-            DeletePageCommand = new DelegateCommand(Delete, CanDelete).ObservesProperty(() => CurrentPage).ObservesProperty(() => PictureModels);
-            ConfirmCommand = new DelegateCommand(Confirm, CanConfirm).ObservesProperty(() => RechnungsName).ObservesProperty(() => CurrentPage);
+            OpenFileCommand = new DelegateCommand(Open, CanOpen).ObservesProperty(() => LockedEdit);
+            DeletePageCommand = new DelegateCommand(Delete, CanDelete).ObservesProperty(() => CurrentPage).ObservesProperty(() => PictureModels).ObservesProperty(() => LockedEdit);
+            ConfirmCommand = new DelegateCommand(Confirm, CanConfirm).ObservesProperty(() => RechnungsName).ObservesProperty(() => CurrentPage).ObservesProperty(() => LockedEdit);
             PictureModels = new List<PictureModel>();
             
             _eventAggregator.GetEvent<SelectedPageEvent>().Subscribe(page =>
@@ -36,17 +38,27 @@ namespace SturmProjekt.ViewModels
             {
                 CurrentPage = page;
             });
+            _eventAggregator.GetEvent<FreeLockEvent>().Subscribe(locked =>
+            {
+                LockedEdit = locked;
+            });
+        }
+
+        public bool LockedEdit
+        {
+            get => _lockedEdit;
+            set => SetProperty(ref _lockedEdit, value);
         }
 
         public string RechnungsName
         {
-            get { return _rechnungsName; }
-            set { SetProperty(ref _rechnungsName, value); }
+            get => _rechnungsName;
+            set => SetProperty(ref _rechnungsName, value);
         }
 
         private bool CanConfirm()
         {
-            return PictureModels.Count > 0 && !(string.IsNullOrEmpty(RechnungsName));
+            return PictureModels.Count > 0 && !(string.IsNullOrEmpty(RechnungsName)) && !LockedEdit;
         }
 
         private void Confirm()
@@ -58,8 +70,8 @@ namespace SturmProjekt.ViewModels
                 Pages = PictureModels
             };
             _eventAggregator.GetEvent<CreateRechnungEvent>().Publish(rechnung);
+            LockedEdit = true;
         }
-
 
         public PictureModel CurrentPage
         {
@@ -71,13 +83,14 @@ namespace SturmProjekt.ViewModels
 
         private bool CanDelete()
         {
-            return CurrentPage != null && PictureModels.Count > 0;
+            return CurrentPage != null && PictureModels.Count > 0 && !LockedEdit;
         }
 
         private void Delete()
         {
             _eventAggregator.GetEvent<RemovePictureEvent>().Publish(CurrentPage);
             int index = PictureModels.IndexOf(CurrentPage);
+            CurrentPage.Page.Dispose();
             PictureModels.Remove(CurrentPage);
             
             CurrentPage = null;
@@ -90,6 +103,7 @@ namespace SturmProjekt.ViewModels
             } 
 
             _eventAggregator.GetEvent<PageListEvent>().Publish(PictureModels);
+            GC.Collect();
         }
 
         public List<PictureModel> PictureModels
@@ -104,7 +118,7 @@ namespace SturmProjekt.ViewModels
 
         private bool CanOpen()
         {
-            return true;
+            return !LockedEdit;
         }
 
         private void Open()
@@ -120,19 +134,16 @@ namespace SturmProjekt.ViewModels
                 picture.FileName = open.FileName;
                 if (_bl.IsPdf(picture.FileName))
                 {
-                    var document = _bl.GetPdfDocument(picture.FileName);
-                    var bitmaps = _bl.GetBitMapFromPDF(document);
+                    var document = _bl.GetPdfDocument(picture.FileName).Result;
+                    var bitmaps = _bl.GetBitMapFromPDF(document).Result;
+                    document.Dispose();
 
-                    foreach (var bitmap in bitmaps)
+                    pictures.AddRange(bitmaps.Select(bitmap => new PictureModel
                     {
-                        var pic = new PictureModel
-                        {
-                            FileName = picture.FileName,
-                            Page = bitmap,
-                            PageImage = _bl.BitmapToImageSource(bitmap)
-                        };
-                        pictures.Add(pic);
-                    }
+                        FileName = picture.FileName,
+                        Page = bitmap,
+                        PageImage = _bl.BitmapToImageSource(bitmap).Result
+                    }));
 
                     PictureModels.AddRange(pictures);
                     if (CurrentPage == null)
@@ -144,8 +155,8 @@ namespace SturmProjekt.ViewModels
                 }
                 else
                 {
-                   picture.Page =   _bl.ResizeBitmap(_bl.ConvertImageToBitmap(picture.FileName));
-                    picture.PageImage = _bl.BitmapToImageSource(picture.Page);
+                   picture.Page =   _bl.ResizeBitmap(_bl.ConvertImageToBitmap(picture.FileName).Result).Result;
+                    picture.PageImage = _bl.BitmapToImageSource(picture.Page).Result;
                     PictureModels.Add(picture);
                     if(CurrentPage == null)
                     {
@@ -159,10 +170,5 @@ namespace SturmProjekt.ViewModels
                 _eventAggregator.GetEvent<PageListEvent>().Publish(_pictureModels);
             }
         }
-
-
-
-
-
     }
 }
