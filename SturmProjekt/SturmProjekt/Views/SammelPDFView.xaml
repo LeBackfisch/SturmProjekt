@@ -9,7 +9,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
     <StackPanel>
-        <Button Command="{Binding OpenCommand}" Content="SammelPDF auswählen"></Button>
+            <Button Command="{Binding OpenCommand}" Content="SammelPDF auswählen" Margin="0,10,0,10" Padding="3, 10, 30, 10"></Button>
         <TextBlock Text="{Binding FileName}"></TextBlock>
         <ComboBox Margin="0,10,0,10" Padding="3, 10, 30, 10" ItemsSource="{Binding ProfileList}" DisplayMemberPath="Name"
                   SelectedItem="{Binding SelectedProfile, Mode=TwoWay}">
@@ -26,7 +26,7 @@
                 </Style>
             </ComboBox.Style>
         </ComboBox>
-        <Button Command="{Binding SortPDFCommand}" Content="SammelPDF sortiern"></Button>
+            <Button Command="{Binding SortPDFCommand}" Content="SammelPDF sortiern" Margin="0,10,0,10" Padding="3, 10, 30, 10"></Button>
         </StackPanel>
     </Grid>
 </UserControl>

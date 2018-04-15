@@ -133,6 +133,7 @@
     <Compile Include="Events\SelectedPageEvent.cs" />
     <Compile Include="Models\FileModel.cs" />
     <Compile Include="Models\LinesModel.cs" />
+    <Compile Include="Models\OffSetModel.cs" />
     <Compile Include="Models\PictureModel.cs" />
     <Compile Include="Models\ProfilePages.cs" />
     <Compile Include="Ocr.cs" />

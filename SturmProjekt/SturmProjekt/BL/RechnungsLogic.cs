@@ -12,14 +12,19 @@ namespace SturmProjekt.BL
 {
     public class RechnungsLogic
     {
-        public List<Bitmap> CutoutBitmap(Bitmap sourceBitmap, ProfilePages profilePage)
+        public List<Bitmap> CutoutBitmap(Bitmap sourceBitmap, ProfilePages profilePage, int offsetx, int offsety)
         {
             List<LinesModel> lines = profilePage.DrawLines;
 
-            return lines.Select(line => new Rectangle(line.X, line.Y, line.Width, line.Height)).Select(srcRect => sourceBitmap.Clone(srcRect, sourceBitmap.PixelFormat)).ToList();
+            return lines.Select(line => new Rectangle(line.X+offsetx, line.Y+offsety, line.Width, line.Height)).Select(srcRect => sourceBitmap.Clone(srcRect, sourceBitmap.PixelFormat)).ToList();
         }
 
-        public async Task<List<Bitmap>> GetCutOutBitmaps(List<Bitmap> bitmaps, List<ProfilePages> pages)
+        public async Task<Bitmap> GetFirstCutOutBitmap(List<Bitmap> bitmaps, List<ProfilePages> pages)
+        {
+            return CutoutBitmap(bitmaps.FirstOrDefault(), pages.FirstOrDefault(), 0, 0).FirstOrDefault();
+        }
+
+        public async Task<List<Bitmap>> GetCutOutBitmaps(List<Bitmap> bitmaps, List<ProfilePages> pages, int offsetx, int offsety)
         {
             int index = 0;
             var cutoutbitmaps = new List<Bitmap>();
@@ -28,7 +33,7 @@ namespace SturmProjekt.BL
                 if (pages.Count > index)
                 {
                     var index1 = index;
-                    var cutout = CutoutBitmap(bitmap, pages.ElementAt(index1));
+                    var cutout = CutoutBitmap(bitmap, pages.ElementAt(index1), offsetx, offsety);
                     cutoutbitmaps.AddRange(cutout);
                 }
                 
@@ -47,7 +52,7 @@ namespace SturmProjekt.BL
             return directoryList;
         }
    
-        public List<string> GetOcrInfo(List<Bitmap> infoBitmaps, int x, int y, string datapath)
+        public List<string> GetOcrInfo(List<Bitmap> infoBitmaps, string datapath)
         {
             var values = new List<string>();
           //  List<Bitmap> CorrectedBitmaps = new List<Bitmap>();
@@ -91,9 +96,9 @@ namespace SturmProjekt.BL
             {
                 for (int x = 0; x < img1.Width; x++)
                 {
-                    diff += await Task.Run(() => (float)Math.Abs(img1.GetPixel(x, y).R - img2.GetPixel(x, y).R) / 255);
-                    diff += await Task.Run(() => (float)Math.Abs(img1.GetPixel(x, y).G - img2.GetPixel(x, y).G) / 255);
-                    diff += await Task.Run(() => (float)Math.Abs(img1.GetPixel(x, y).B - img2.GetPixel(x, y).B) / 255);
+                    diff +=  (float)Math.Abs(img1.GetPixel(x, y).R - img2.GetPixel(x, y).R) / 255;
+                    diff +=  (float)Math.Abs(img1.GetPixel(x, y).G - img2.GetPixel(x, y).G) / 255;
+                    diff +=  (float)Math.Abs(img1.GetPixel(x, y).B - img2.GetPixel(x, y).B) / 255;
                 }
             }
 

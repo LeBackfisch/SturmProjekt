@@ -12,5 +12,6 @@ namespace SturmProjekt.Models
         public string FilePath { get; set; }
         public int PageCount { get; set; }
         public List<ProfilePages> Pages { get; set; }
+        public OffSetModel Offset { get; set; }
     }
 }

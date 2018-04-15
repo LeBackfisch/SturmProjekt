@@ -10460,23 +10460,23 @@
             <summary>
             (Optional) A name object specifying the page layout to be used when the document is 
             opened:
-            SinglePage - Display one page at a time.
-            OneColumn - Display the pages in one column.
-            TwoColumnLeft - Display the pages in two columns, with oddnumbered pages on the left.
-            TwoColumnRight - Display the pages in two columns, with oddnumbered pages on the right.
-            TwoPageLeft - (PDF 1.5) Display the pages two at a time, with odd-numbered pages on the left
-            TwoPageRight - (PDF 1.5) Display the pages two at a time, with odd-numbered pages on the right.
+                SinglePage - Display one page at a time.
+                OneColumn - Display the pages in one column.
+                TwoColumnLeft - Display the pages in two columns, with oddnumbered pages on the left.
+                TwoColumnRight - Display the pages in two columns, with oddnumbered pages on the right.
+                TwoPageLeft - (PDF 1.5) Display the pages two at a time, with odd-numbered pages on the left
+                TwoPageRight - (PDF 1.5) Display the pages two at a time, with odd-numbered pages on the right.
             </summary>
         </member>
         <member name="F:PdfSharp.Pdf.Advanced.PdfCatalog.Keys.PageMode">
             <summary>
             (Optional) A name object specifying how the document should be displayed when opened:
-            UseNone - Neither document outline nor thumbnail images visible.
-            UseOutlines - Document outline visible.
-            UseThumbs - Thumbnail images visible.
-            FullScreen - Full-screen mode, with no menu bar, windowcontrols, or any other window visible.
-            UseOC - (PDF 1.5) Optional content group panel visible.
-            UseAttachments (PDF 1.6) Attachments panel visible.
+                UseNone - Neither document outline nor thumbnail images visible.
+                UseOutlines - Document outline visible.
+                UseThumbs - Thumbnail images visible.
+                FullScreen - Full-screen mode, with no menu bar, windowcontrols, or any other window visible.
+                UseOC - (PDF 1.5) Optional content group panel visible.
+                UseAttachments (PDF 1.6) Attachments panel visible.
             Default value: UseNone.
             </summary>
         </member>
@@ -10574,6 +10574,31 @@
             <summary>
             (Optional; PDF 1.5) A dictionary containing attestations regarding the content of a 
             PDF document, as it relates to the legality of digital signatures.
+            </summary>
+        </member>
+        <member name="F:PdfSharp.Pdf.Advanced.PdfCatalog.Keys.Requirements">
+            <summary>
+            (Optional; PDF 1.7) An array of requirement dictionaries representing
+            requirements for the document.
+            </summary>
+        </member>
+        <member name="F:PdfSharp.Pdf.Advanced.PdfCatalog.Keys.Collection">
+            <summary>
+            (Optional; PDF 1.7) A collection dictionary that a PDF consumer uses to enhance
+            the presentation of file attachments stored in the PDF document.
+            </summary>
+        </member>
+        <member name="F:PdfSharp.Pdf.Advanced.PdfCatalog.Keys.NeedsRendering">
+            <summary>
+            (Optional; PDF 1.7) A flag used to expedite the display of PDF documents containing XFA forms.
+            It specifies whether the document must be regenerated when the document is first opened.
+            If true, the viewer application treats the document as a shell and regenerates the content
+            when the document is opened, regardless of any dynamic forms settings that appear in the XFA
+            stream itself. This setting is used to expedite the display of documents whose layout varies
+            depending on the content of the XFA streams. 
+            If false, the viewer application does not regenerate the content when the document is opened.
+            See the XML Forms Architecture (XFA) Specification (Bibliography).
+            Default value: false.
             </summary>
         </member>
         <member name="P:PdfSharp.Pdf.Advanced.PdfCatalog.Keys.Meta">
@@ -13785,6 +13810,12 @@
             • The border of a link annotation
             </summary>
         </member>
+        <member name="F:PdfSharp.Pdf.Annotations.PdfAnnotation.Keys.StructParent">
+            <summary>
+            (Required if the annotation is a structural content item; PDF 1.3)
+            The integer key of the annotation’s entry in the structural parent tree.
+            </summary>
+        </member>
         <member name="F:PdfSharp.Pdf.Annotations.PdfAnnotation.Keys.A">
             <summary>
             (Optional; PDF 1.1) An action to be performed when the annotation is activated.
@@ -14487,6 +14518,81 @@
         <member name="T:PdfSharp.Pdf.Content.Objects.OpCodeName">
             <summary>
             The names of the op-codes. 
+            </summary>
+        </member>
+        <member name="F:PdfSharp.Pdf.Content.Objects.OpCodeName.b">
+            <summary>
+            Close, fill, and stroke path using nonzero winding number rule.
+            </summary>
+        </member>
+        <member name="F:PdfSharp.Pdf.Content.Objects.OpCodeName.B">
+            <summary>
+            Fill and stroke path using nonzero winding number rule.
+            </summary>
+        </member>
+        <member name="F:PdfSharp.Pdf.Content.Objects.OpCodeName.bx">
+            <summary>
+            Close, fill, and stroke path using even-odd rule.
+            </summary>
+        </member>
+        <member name="F:PdfSharp.Pdf.Content.Objects.OpCodeName.Bx">
+            <summary>
+            Fill and stroke path using even-odd rule.
+            </summary>
+        </member>
+        <member name="F:PdfSharp.Pdf.Content.Objects.OpCodeName.BDC">
+            <summary>
+            (PDF 1.2) Begin marked-content sequence with property list.
+            </summary>
+        </member>
+        <member name="F:PdfSharp.Pdf.Content.Objects.OpCodeName.BI">
+            <summary>
+            Begin inline image object.
+            </summary>
+        </member>
+        <member name="F:PdfSharp.Pdf.Content.Objects.OpCodeName.BMC">
+            <summary>
+            (PDF 1.2) Begin marked-content sequence.
+            </summary>
+        </member>
+        <member name="F:PdfSharp.Pdf.Content.Objects.OpCodeName.BT">
+            <summary>
+            Begin text object.
+            </summary>
+        </member>
+        <member name="F:PdfSharp.Pdf.Content.Objects.OpCodeName.BX">
+            <summary>
+            (PDF 1.1) Begin compatibility section.
+            </summary>
+        </member>
+        <member name="F:PdfSharp.Pdf.Content.Objects.OpCodeName.DP">
+            <summary>
+            (PDF 1.2) Define marked-content point with property list.
+            </summary>
+        </member>
+        <member name="F:PdfSharp.Pdf.Content.Objects.OpCodeName.EMC">
+            <summary>
+            (PDF 1.2) End marked-content sequence.
+            </summary>
+        </member>
+        <member name="F:PdfSharp.Pdf.Content.Objects.OpCodeName.EX">
+            <summary>
+            (PDF 1.1) End compatibility section.
+            </summary>
+        </member>
+        <member name="F:PdfSharp.Pdf.Content.Objects.OpCodeName.MP">
+            <summary>
+            (PDF 1.2) Define marked-content point
+            </summary>
+        </member>
+        <member name="F:PdfSharp.Pdf.Content.Objects.OpCodeName.QuoteSingle">
+            <summary>
+            Move to next line and show text.
+            </summary>
+        </member>
+        <member name="F:PdfSharp.Pdf.Content.Objects.OpCodeName.QuoteDbl">
+            <summary>
+            Set word and character spacing, move to next line, and show text.
             </summary>
         </member>
         <member name="T:PdfSharp.Pdf.Content.Objects.OpCode">
@@ -15751,6 +15857,19 @@
             <summary>
             Reads cross reference table(s) and trailer(s).
             </summary>
+        </member>
+        <member name="M:PdfSharp.Pdf.IO.Parser.CheckXRefTableEntry(System.Int32,System.Int32,System.Int32,System.Int32@,System.Int32@)">
+            <summary>
+            Checks the x reference table entry. Returns true if everything is correct.
+            Return false if the keyword "obj" was found, but ID or Generation are incorrect.
+            Throws an exception otherwise.
+            </summary>
+            <param name="position">The position where the object is supposed to be.</param>
+            <param name="id">The ID from the XRef table.</param>
+            <param name="generation">The generation from the XRef table.</param>
+            <param name="idChecked">The identifier found in the PDF file.</param>
+            <param name="generationChecked">The generation found in the PDF file.</param>
+            <returns></returns>
         </member>
         <member name="M:PdfSharp.Pdf.IO.Parser.ReadXRefStream(PdfSharp.Pdf.Advanced.PdfCrossReferenceTable)">
             <summary>
@@ -18929,7 +19048,7 @@
         </member>
         <member name="M:PdfSharp.Pdf.PdfOutline.Initialize">
             <summary>
-            Initializes this instance from an exisiting PDF document.
+            Initializes this instance from an existing PDF document.
             </summary>
         </member>
         <member name="M:PdfSharp.Pdf.PdfOutline.PrepareForSave">
@@ -19185,8 +19304,8 @@
         </member>
         <member name="M:PdfSharp.Pdf.PdfPage.Close">
             <summary>
-            Closes the page. A closes page cannot be modified anymore and it is not possible to
-            get an XGraphics object for a closed page. Closing a page is not required, but may saves
+            Closes the page. A closed page cannot be modified anymore and it is not possible to
+            get an XGraphics object for a closed page. Closing a page is not required, but may save
             resources if the document has many pages. 
             </summary>
         </member>
@@ -19259,7 +19378,6 @@
             <summary>
             Gets or sets the /Rotate entry of the PDF page. The value is the number of degrees by which the page 
             should be rotated clockwise when displayed or printed. The value must be a multiple of 90.
-            TODO: Next statement is not correct: 
             PDFsharp does not set this value, but for imported pages this value can be set and must be taken
             into account when adding graphic to such a page.
             </summary>

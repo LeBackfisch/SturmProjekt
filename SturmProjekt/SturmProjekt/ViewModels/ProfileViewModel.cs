@@ -25,6 +25,7 @@ namespace SturmProjekt.ViewModels
         private ProfileModel _selectedProfile;
         private RechnungsModel _rechnungWithoutLines;
         private string _buttonText = "Add Lines";
+        private string _sorted = "";
         private bool _buttonclicked;
 
 
@@ -78,9 +79,18 @@ namespace SturmProjekt.ViewModels
 
         private void Sort()
         {
-            _bl.CutOutBitmaps(RechnungWithoutLines, SelectedProfile);
+            var sorted = _bl.CutOutBitmaps(RechnungWithoutLines, SelectedProfile, true).Result;
             Rechnung = null;
             RechnungWithoutLines = null;
+            if (sorted != -1)
+            {
+                Sorted = "Rechnung wurde in " + SelectedProfile.Name + " eingeordnet!";
+            }
+            else
+            {
+                Sorted = "Rechnung konnte nicht eingeordnet werden!";
+            }
+
             foreach (var rechnung in RechnungsList)
             {
                 rechnung.Page.Dispose();
@@ -115,6 +125,12 @@ namespace SturmProjekt.ViewModels
                 _buttonclicked = false;
             }
            
+        }
+
+        public string Sorted
+        {
+            get => _sorted;
+            set => SetProperty(ref _sorted, value);
         }
 
         public RechnungsModel RechnungWithoutLines

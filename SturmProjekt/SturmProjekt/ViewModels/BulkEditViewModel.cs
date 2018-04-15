@@ -22,6 +22,7 @@ namespace SturmProjekt.ViewModels
         private IEnumerable<ProfileModel> _profileList;
         private ProfileModel _selectedProfile;
         private string _fileCountText;
+        private string _filesSorted;
 
         public BulkEditViewModel(BusinessLayer businessLayer, IEventAggregator eventAggregator)
         {
@@ -40,7 +41,8 @@ namespace SturmProjekt.ViewModels
 
         private void Sort()
         {
-            Task.Run(() => _businessLayer.SortDirectoryFiles(Files, SelectedProfile));
+            var count =_businessLayer.SortDirectoryFiles(Files, SelectedProfile).Result;
+            FilesSorted = count+ " Dateien wurden in Profil " + SelectedProfile.Name + " einsortiert";
             FileCount = 0;
             FileCountText = null;
             SelectedProfile = null;
@@ -65,6 +67,7 @@ namespace SturmProjekt.ViewModels
             Files = new List<FileModel>();
             var folderpath = open.SelectedPath;
             _directory = new DirectoryInfo(folderpath);
+            FilesSorted = "";
             GetFiles();
         }
 
@@ -82,7 +85,7 @@ namespace SturmProjekt.ViewModels
                 }
                
             }
-            FileCountText = FileCount.ToString();
+            FileCountText = FileCount +" zulässige Datein wurden im ausgewählten Ordner gefunden.";
         }
 
         public List<FileModel> Files
@@ -97,6 +100,11 @@ namespace SturmProjekt.ViewModels
             set => SetProperty(ref _fileCount, value);
         }
 
+        public string FilesSorted
+        {
+            get => _filesSorted;
+            set => SetProperty(ref _filesSorted, value);
+        }
         public string FileCountText
         {
             get => _fileCountText;
