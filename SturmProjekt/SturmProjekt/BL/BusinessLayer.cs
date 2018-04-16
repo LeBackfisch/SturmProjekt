@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using AForge;
 using AForge.Imaging;
@@ -19,6 +20,7 @@ using Brushes = System.Drawing.Brushes;
 using Image = System.Drawing.Image;
 using PdfDocument = Spire.Pdf.PdfDocument;
 using Pen = System.Drawing.Pen;
+using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
 namespace SturmProjekt.BL
 {
@@ -223,6 +225,14 @@ namespace SturmProjekt.BL
             List<Bitmap> cutOutBitmaps = new List<Bitmap>();
             List<Rectangle> rectangles = await GetRectangles(bitmapforlogo);
 
+            /*int i = 0;
+            foreach (var rect in rectangles)
+            {
+                PixelFormat format = bitmapforlogo.PixelFormat;
+                var copy = bitmapforlogo.Clone(rect, format);
+                copy.Save("test" + i + ".jpg", ImageFormat.Jpeg);
+                i++;
+            } */
            
 
             List<Bitmap> logoList = GetLogos();
@@ -241,7 +251,7 @@ namespace SturmProjekt.BL
                         moveY = rectangle.Y - moveY;
 
                         var difference = await _rechnungsLogic.CalculateDifference(logo, cutlogo);
-                        if (difference <= 7.0f)
+                        if (difference <= 14.0f)
                         {
                             chosenlogo = logoindex;
                             cutOutBitmaps = await _rechnungsLogic.GetCutOutBitmaps(bitmaps, profile.Pages, moveX, moveY);
@@ -249,10 +259,10 @@ namespace SturmProjekt.BL
                         }
                         cutlogo.Dispose();
                     }
-                    else if ((logo.Width + (logo.Width * 0.05) > rectangle.Width) &&
-                             (logo.Width - (logo.Width * 0.05) < rectangle.Width) &&
-                             (logo.Height + (logo.Height * 0.05) > rectangle.Height) &&
-                             (logo.Height - (logo.Height * 0.05) < rectangle.Height))
+                    else if ((logo.Width + (logo.Width * 0.07) > rectangle.Width) &&
+                             (logo.Width - (logo.Width * 0.07) < rectangle.Width) &&
+                             (logo.Height + (logo.Height * 0.07) > rectangle.Height) &&
+                             (logo.Height - (logo.Height * 0.07) < rectangle.Height))
                     {
                         Bitmap cutBitmap = bitmapforlogo;
                         PixelFormat format = cutBitmap.PixelFormat;
@@ -262,7 +272,7 @@ namespace SturmProjekt.BL
                         var resizedlogo = new Bitmap(cutlogo, logo.Width, logo.Height);
                         cutlogo.Dispose();
                         var difference = await _rechnungsLogic.CalculateDifference(logo, resizedlogo);
-                        if (difference <= 7.0f)
+                        if (difference <= 14.0f)
                         {
                             chosenlogo = logoindex;
                             cutOutBitmaps = await _rechnungsLogic.GetCutOutBitmaps(bitmaps, profile.Pages, moveX, moveY);
@@ -327,7 +337,7 @@ namespace SturmProjekt.BL
             blobCounter.ProcessImage(bitmapData);
             Blob[] blobs = blobCounter.GetObjectsInformation();
             usedrect.UnlockBits(bitmapData);
-
+            
             return blobs.Select(blob => blob.Rectangle).ToList();
         }
 

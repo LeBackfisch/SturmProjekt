@@ -1,5 +1,5 @@
 {
-"Name":"WienEnergieMusterProfil",
+"Name":"VerbundMusterProfil",
 "PageCount":"3",
 "Pages":[
 			{
@@ -7,45 +7,45 @@
 				[
 				
 					{
-						"X":1550,
+						"X":250,
 						"Y":100,
-						"Width":800,
-						"Height":300	
+						"Width":600,
+						"Height":200	
+					},
+					
+					{
+						"X":270,
+						"Y":635,
+						"Width":760,
+						"Height":250
 					},
 					
 					{
 						"X":250,
-						"Y":635,
-						"Width":760,
-						"Height":200
+						"Y":1215,
+						"Width":1500,
+						"Height":70
 					},
 					
 					{
-						"X":240,
-						"Y":1240,
-						"Width":1750,
-						"Height":90
-					},
-					
-					{
-						"X":910,
-						"Y":1410,
+						"X":870,
+						"Y":1400,
 						"Width":500,
 						"Height":80
 					},
 					
 					{
-						"X":200,
-						"Y":1480,
-						"Width":1700,
-						"Height":170
+						"X":270,
+						"Y":1470,
+						"Width":1930,
+						"Height":280
 					},
 					
 					{
-						"X":200,
-						"Y":1650,
-						"Width":1700,
-						"Height":170
+						"X":270,
+						"Y":1750,
+						"Width":1930,
+						"Height":280
 					}
 					
 				]	
@@ -56,7 +56,7 @@
 					{
 						"X":200,
 						"Y":200,
-						"Width":1100,
+						"Width":1800,
 						"Height":500
 						
 					}
@@ -68,7 +68,7 @@
 					{
 						"X":200,
 						"Y":200,
-						"Width":1100,
+						"Width":1800,
 						"Height":500
 						
 					}
@@ -76,7 +76,7 @@
 			}
 		],
 "Offset":{
-			"X":110,
-			"Y":37
+			"X":0,
+			"Y":0
 		}
 }

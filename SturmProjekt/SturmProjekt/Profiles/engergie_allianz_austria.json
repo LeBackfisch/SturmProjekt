@@ -1,0 +1,82 @@
+{
+"Name":"EnergieAllianzAustriaMusterProfil",
+"PageCount":"3",
+"Pages":[
+			{
+			"DrawLines": 
+				[
+				
+					{
+						"X":100,
+						"Y":100,
+						"Width":400,
+						"Height":400	
+					},
+					
+					{
+						"X":220,
+						"Y":600,
+						"Width":780,
+						"Height":320
+					},
+					
+					{
+						"X":650,
+						"Y":1390,
+						"Width":1200,
+						"Height":150
+					},
+					
+					{
+						"X":900,
+						"Y":1650,
+						"Width":550,
+						"Height":80
+					},
+					
+					{
+						"X":240,
+						"Y":1700,
+						"Width":1700,
+						"Height":215
+					},
+					
+					{
+						"X":240,
+						"Y":1915,
+						"Width":1700,
+						"Height":215
+					}
+					
+				]	
+			},
+			{
+			"DrawLines": 
+				[
+					{
+						"X":200,
+						"Y":200,
+						"Width":1800,
+						"Height":650
+						
+					}
+				]	
+			},
+			{
+			"DrawLines": 
+				[
+					{
+						"X":200,
+						"Y":200,
+						"Width":1800,
+						"Height":650
+						
+					}
+				]	
+			}
+		],
+"Offset":{
+			"X":67,
+			"Y":79
+		}
+}

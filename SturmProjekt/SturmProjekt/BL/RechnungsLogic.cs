@@ -55,15 +55,12 @@ namespace SturmProjekt.BL
         public List<string> GetOcrInfo(List<Bitmap> infoBitmaps, string datapath)
         {
             var values = new List<string>();
-          //  List<Bitmap> CorrectedBitmaps = new List<Bitmap>();
             infoBitmaps.RemoveAt(0);
 
-         //   CorrectedBitmaps = CropBitMaps(infoBitmaps, x, y);
             int i = 0;
             
             foreach (var correctedBitmap in infoBitmaps)
             {
-                correctedBitmap.Save("test"+i+".jpg", ImageFormat.Jpeg);
                 var ocr = new tessnet2.Tesseract();
                 ocr.Init(datapath,
                     "deu", false);
