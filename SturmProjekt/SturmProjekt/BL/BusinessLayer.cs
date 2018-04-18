@@ -444,11 +444,20 @@ namespace SturmProjekt.BL
 
             foreach (var value in values)
             {
-                csv.Append(value.Item1);
-                csv.Append(",");
+                if (String.IsNullOrWhiteSpace(value.Item1))
+                {
+                    csv.Append("-");
+                    csv.Append(",");
+                }
+                else
+                {
+                    csv.Append(value.Item1);
+                    csv.Append(",");
+                }
+                
             }
 
-            csv.Length--;
+            csv.Append(Environment.NewLine);
 
             return csv.ToString();
         }
@@ -465,7 +474,11 @@ namespace SturmProjekt.BL
             else
             {
                CreateCsv(filepath);
+                
+                //List<string> line = new List<string>();
                 var line = AddtoCsv(values);
+                //line.Add(AddtoCsv(values));
+                //File.AppendAllLines(filepath, line);
                 File.AppendAllText(filepath, line);
             }
         }
@@ -480,7 +493,7 @@ namespace SturmProjekt.BL
                 csv.Append(",");
             }
 
-            csv.Length--;
+            csv.Append(Environment.NewLine);
 
             return csv.ToString();
         }

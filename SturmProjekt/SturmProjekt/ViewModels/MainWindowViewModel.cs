@@ -40,7 +40,22 @@ namespace SturmProjekt.ViewModels
             _eventAggregator.GetEvent<RechnungsPageEvent>().Subscribe(page =>
             {
                 RechnungsPage = page;
-            });      
+            });
+            _eventAggregator.GetEvent<FreeLockEvent>().Subscribe(locked =>
+            {
+                if (locked)
+                {
+                    CurrentPage.Page.Dispose();
+                    CurrentPage = null;
+                    GC.Collect();
+                }
+            });
+            _eventAggregator.GetEvent<RemovePicturesEvent>().Subscribe(x =>
+            {
+                CurrentPage.Page.Dispose();
+                CurrentPage = null;
+                GC.Collect();
+            });
         }
 
         public MainWindowViewModel()

@@ -29,6 +29,27 @@ namespace SturmProjekt.ViewModels
                 CurrentPage = page;
                 GC.Collect();
             });
+            _eventAggregator.GetEvent<FreeLockEvent>().Subscribe(locked =>
+            {
+                if (locked)
+                {
+                  
+                    foreach (var item in List)
+                    {
+                        item.Page.Dispose();
+                    }
+                    List = new ObservableCollection<PictureModel>();
+                } 
+            });
+            _eventAggregator.GetEvent<RemovePicturesEvent>().Subscribe(locked =>
+            {
+              
+                foreach (var item in List)
+                    {
+                        item.Page.Dispose();
+                    }
+                    List = new ObservableCollection<PictureModel>();
+            });
         }
         
         public IEnumerable<PictureModel> List

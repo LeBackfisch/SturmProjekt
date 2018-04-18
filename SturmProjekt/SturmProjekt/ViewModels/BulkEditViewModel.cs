@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
@@ -59,7 +60,7 @@ namespace SturmProjekt.ViewModels
             var open = new FolderBrowserDialog
             {
                 ShowNewFolderButton = false,
-                SelectedPath = System.AppDomain.CurrentDomain.BaseDirectory
+                SelectedPath = Environment.SpecialFolder.Desktop.ToString()
             };
             var result = open.ShowDialog();
             if (result != DialogResult.OK) return;

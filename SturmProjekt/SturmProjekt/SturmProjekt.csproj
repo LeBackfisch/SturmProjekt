@@ -155,9 +155,11 @@
     <Compile Include="Events\CreateRechnungEvent.cs" />
     <Compile Include="Events\DeletedPageEvent.cs" />
     <Compile Include="Events\FreeLockEvent.cs" />
+    <Compile Include="Events\NewFileEvent.cs" />
     <Compile Include="Events\PageListEvent.cs" />
     <Compile Include="Events\RechnungsPageEvent.cs" />
     <Compile Include="Events\RemovePictureEvent.cs" />
+    <Compile Include="Events\RemovePicturesEvent.cs" />
     <Compile Include="Events\SelectedPageEvent.cs" />
     <Compile Include="Models\FileModel.cs" />
     <Compile Include="Models\KeywordModel.cs" />

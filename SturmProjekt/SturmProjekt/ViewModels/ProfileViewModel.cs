@@ -51,6 +51,10 @@ namespace SturmProjekt.ViewModels
                 CurrentPageNumber = pagenumber;
                 RechnungsPage = RechnungsList.ElementAt(CurrentPageNumber-1);
             });
+            _eventAggregator.GetEvent<NewFileEvent>().Subscribe(x =>
+            {
+                Sorted = "";
+            });
 
         }
 
@@ -97,7 +101,9 @@ namespace SturmProjekt.ViewModels
             }
             RechnungsList = null;
             RechnungsPage = null;
-            _eventAggregator.GetEvent<FreeLockEvent>().Publish(false);
+            _buttonclicked = false;
+            ButtonText = "Add Lines";
+            _eventAggregator.GetEvent<FreeLockEvent>().Publish(true);
         }
 
         private bool CanDraw()

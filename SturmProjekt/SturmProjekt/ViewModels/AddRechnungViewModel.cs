@@ -27,6 +27,7 @@ namespace SturmProjekt.ViewModels
             _eventAggregator = eventAggregator;
             OpenFileCommand = new DelegateCommand(Open, CanOpen).ObservesProperty(() => LockedEdit);
             DeletePageCommand = new DelegateCommand(Delete, CanDelete).ObservesProperty(() => CurrentPage).ObservesProperty(() => PictureModels).ObservesProperty(() => LockedEdit);
+            DeleteAllCommand = new DelegateCommand(DeleteAll, CanDeleteAll).ObservesProperty(() => CurrentPage).ObservesProperty(() => PictureModels).ObservesProperty(() => LockedEdit);
             ConfirmCommand = new DelegateCommand(Confirm, CanConfirm).ObservesProperty(() => RechnungsName).ObservesProperty(() => CurrentPage).ObservesProperty(() => LockedEdit);
             PictureModels = new List<PictureModel>();
             
@@ -40,7 +41,18 @@ namespace SturmProjekt.ViewModels
             });
             _eventAggregator.GetEvent<FreeLockEvent>().Subscribe(locked =>
             {
-                LockedEdit = locked;
+                LockedEdit = false;
+                if (locked)
+                {
+                    RechnungsName = "";
+                    CurrentPage.Page.Dispose();
+                    CurrentPage = null;
+                    foreach (var pictureModel in PictureModels)
+                    {
+                        pictureModel.Page.Dispose();
+                    }
+                    PictureModels = new List<PictureModel>();
+                }
             });
         }
 
@@ -81,6 +93,25 @@ namespace SturmProjekt.ViewModels
 
         public ICommand ConfirmCommand { get; set; }
 
+        private bool CanDeleteAll()
+        {
+            return CurrentPage != null && PictureModels.Count > 0 && !LockedEdit;
+        }
+
+        private void DeleteAll()
+        {
+            _eventAggregator.GetEvent<RemovePicturesEvent>().Publish(true);
+            CurrentPage.Page.Dispose();
+            CurrentPage = null;
+
+            foreach (var pictureModel in PictureModels)
+            {
+                pictureModel.Page.Dispose();
+            }
+            PictureModels = new List<PictureModel>();
+            RechnungsName = "";
+        }
+
         private bool CanDelete()
         {
             return CurrentPage != null && PictureModels.Count > 0 && !LockedEdit;
@@ -115,6 +146,7 @@ namespace SturmProjekt.ViewModels
         public ICommand DeletePageCommand { get; set; }
 
         public ICommand OpenFileCommand { get; set; }
+        public ICommand DeleteAllCommand { get; set; }
 
         private bool CanOpen()
         {
@@ -167,7 +199,8 @@ namespace SturmProjekt.ViewModels
 
                 if (_pictureModels.Count > 0)
                         _eventAggregator.GetEvent<AddedPageEvent>().Publish(_pictureModels.Last());
-                _eventAggregator.GetEvent<PageListEvent>().Publish(_pictureModels);
+                        _eventAggregator.GetEvent<PageListEvent>().Publish(_pictureModels);
+                        _eventAggregator.GetEvent<NewFileEvent>().Publish(true);
             }
         }
     }
