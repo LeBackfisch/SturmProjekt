@@ -25,7 +25,7 @@ namespace SturmProjekt.BL
             {
                 if (string.IsNullOrWhiteSpace(_profilePath))
                 {
-                    _profilePath = Properties.Resources.ProfilesPath;
+                    _profilePath = Properties.Settings.Default.ProfilePath;
                 }
                 return _profilePath;
             }
@@ -38,7 +38,7 @@ namespace SturmProjekt.BL
             {
                 if (string.IsNullOrWhiteSpace(_dataPath))
                 {
-                    _dataPath = Properties.Resources.DataPath;
+                    _dataPath = Properties.Settings.Default.DataPath;
                 }
                 return _dataPath;
             }
@@ -51,7 +51,7 @@ namespace SturmProjekt.BL
             {
                 if (string.IsNullOrWhiteSpace(_tessdataPath))
                 {
-                    _tessdataPath = Properties.Resources.TessDataPath;
+                    _tessdataPath = Properties.Settings.Default.TessDataPath;
                 }
                 return _tessdataPath;
             }

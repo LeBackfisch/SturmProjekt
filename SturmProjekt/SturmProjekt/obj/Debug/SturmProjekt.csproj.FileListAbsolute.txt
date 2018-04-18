@@ -189,3 +189,7 @@ D:\FH\SEM 5\SturmProjekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\SturmP
 D:\FH\SEM 5\SturmProjekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\SturmProjekt.csproj.CoreCompileInputs.cache
 D:\FH\SEM 5\SturmProjekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\SturmProjekt.exe
 D:\FH\SEM 5\SturmProjekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\SturmProjekt.pdb
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\SturmProjekt.exe.manifest
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\bin\Debug\SturmProjekt.application
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\SturmProjekt.exe.manifest
+I:\Clemens-Projekt\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\SturmProjekt.application

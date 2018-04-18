@@ -78,5 +78,31 @@
 "Offset":{
 			"X":0,
 			"Y":0
-		}
+		},
+"Keywords":[
+				{
+					"BitMapNumber":3,
+					"Keywords":[
+									"Gas",
+									"Strom"
+								],
+					"Position":"Last"
+				},
+				{
+					"BitMapNumber":4,
+					"Keywords":[
+									"Gas",
+									"Strom"
+								],
+					"Position":"Last"
+				},
+				{
+					"BitMapNumber":5,
+					"Keywords":[
+									"Zählpunkt"
+								],
+					"Position":"Next"
+				}
+			] 
+
 }

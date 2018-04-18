@@ -78,5 +78,28 @@
 "Offset":{
 			"X":67,
 			"Y":79
-		}
+		},
+"Keywords":[
+				{
+					"BitMapNumber":3,
+					"Keywords":[
+									"Energieverbrauch"
+								],
+					"Position":"Last"
+				},
+				{
+					"BitMapNumber":4,
+					"Keywords":[
+									"Energieverbrauch"
+								],
+					"Position":"Last"
+				},
+				{
+					"BitMapNumber":5,
+					"Keywords":[
+									"Zählpunkt"
+								],
+					"Position":"Next"
+				}
+			] 
 }

@@ -13,5 +13,6 @@ namespace SturmProjekt.Models
         public int PageCount { get; set; }
         public List<ProfilePages> Pages { get; set; }
         public OffSetModel Offset { get; set; }
+        public List<KeywordModel> Keywords { get; set; }
     }
 }

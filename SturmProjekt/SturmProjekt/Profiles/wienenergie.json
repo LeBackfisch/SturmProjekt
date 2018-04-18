@@ -17,13 +17,13 @@
 						"X":250,
 						"Y":635,
 						"Width":760,
-						"Height":200
+						"Height":300
 					},
 					
 					{
 						"X":240,
 						"Y":1240,
-						"Width":1750,
+						"Width":1950,
 						"Height":90
 					},
 					
@@ -37,14 +37,14 @@
 					{
 						"X":200,
 						"Y":1480,
-						"Width":1700,
+						"Width":2100,
 						"Height":170
 					},
 					
 					{
 						"X":200,
 						"Y":1650,
-						"Width":1700,
+						"Width":2100,
 						"Height":170
 					}
 					
@@ -78,5 +78,30 @@
 "Offset":{
 			"X":110,
 			"Y":37
-		}
+		},
+"Keywords":[
+				{
+					"BitMapNumber":3,
+					"Keywords":[
+									"Gas",
+									"Strom"
+								],
+					"Position":"Last"
+				},
+				{
+					"BitMapNumber":4,
+					"Keywords":[
+									"Gas",
+									"Strom"
+								],
+					"Position":"Last"
+				},
+				{
+					"BitMapNumber":5,
+					"Keywords":[
+									"Zählpunkt"
+								],
+					"Position":"Next"
+				}
+			] 
 }

@@ -290,8 +290,9 @@ namespace SturmProjekt.BL
             {
                 var category = GetChosenCategory(directories, logoindex);
                 var values = _rechnungsLogic.GetOcrInfo(cutOutBitmaps, TessDataPath);
-                SaveToCsv(values);
-                //AddtoExcelFile(values);
+                var infos = ApplyKeywords(values, profile).Result;
+                //SaveToCsv(values);
+                AddtoExcelFile(infos);
                 await SaveRechnungAsPDF(rechnung, category);
             }
             else
@@ -300,8 +301,7 @@ namespace SturmProjekt.BL
                 {
                     var category = directories.Last();
                     await SaveRechnungAsPDF(rechnung, category);
-                }
-               
+                }   
             }
 
             bitmapforlogo.Dispose();
@@ -310,6 +310,63 @@ namespace SturmProjekt.BL
             GC.Collect();
             return chosenlogo;
         }
+
+        private async Task<List<Tuple<string, int>>> ApplyKeywords(List<string> values, ProfileModel profile)
+        {
+            List<Tuple<string, int>> infos = new List<Tuple<string, int>>();
+           
+            infos.Add(new Tuple<string, int>(values[0], 0));
+            infos.Add(new Tuple<string, int>(values[1], 1));
+            infos.Add(new Tuple<string, int>(values[2], 2));
+
+            bool found = false;
+            for (int i = 3; i < values.Count; i++)
+            {
+                if (profile.Keywords.Any(s => s.BitMapNumber == i))
+                {
+                    found = false;
+                    var keyword = profile.Keywords.FirstOrDefault(s => s.BitMapNumber == i);
+
+                    foreach (var key in keyword.Keywords)
+                    {
+                        if (found)
+                            break;
+
+                        if (values.ElementAtOrDefault(i).Contains(key))
+                        {
+                            var words = values.ElementAtOrDefault(i).Split(' ');
+
+                            if (keyword.Position.Equals("Next"))
+                            {
+                                var index = words.ToList().IndexOf(words.ToList().Find(x => x.Contains(key)));
+                                if (index == -1)
+                                {
+                                    infos.Add(new Tuple<string, int>("", i));
+                                }
+                                else
+                                {
+                                    infos.Add(new Tuple<string, int>(words[index+1], i));
+                                }                              
+                                found = true;
+                            }
+                            else if (keyword.Position.Equals("Last"))
+                            {
+                                if (String.IsNullOrWhiteSpace(words.LastOrDefault()))
+                                {                                 
+                                    infos.Add(new Tuple<string, int>(words[words.Length - 2], i));
+                                }
+                                else
+                                { 
+                                    infos.Add(new Tuple<string, int>(words.LastOrDefault(), i));
+                                }
+                                found = true;
+                            }
+                        }
+                    }
+                }
+            }
+            return infos;
+        } 
 
         private async Task<List<Rectangle>> GetRectangles(Bitmap bitmap)
         {
@@ -446,30 +503,38 @@ namespace SturmProjekt.BL
                 if (file.FileName.EndsWith(".pdf"))
                 {  
                     var pdf = GetPdfDocument((file.FilePath + "\\" + file.FileName)).Result;
-                    var bitmaps = GetBitMapFromPDF(pdf).Result;
-                    pdf.Dispose();
-                   List<PictureModel> pages = new List<PictureModel>();
-                    foreach (var bitmap in bitmaps)
+                    if (pdf.Pages.Count < 10)
                     {
-                        PictureModel pictureModel = new PictureModel();
-                        var filename = file.FileName.Split('.')[0];
-                        pictureModel.FileName = filename;
-                        pictureModel.Page = ResizeBitmap(bitmap).Result;
-                        pictureModel.PageImage = BitmapToImageSource(pictureModel.Page).Result;
-                        pages.Add(pictureModel);
-                    }
+                        var bitmaps = GetBitMapFromPDF(pdf).Result;
+                        pdf.Dispose();
+                        List<PictureModel> pages = new List<PictureModel>();
+                        foreach (var bitmap in bitmaps)
+                        {
+                            PictureModel pictureModel = new PictureModel();
+                            var filename = file.FileName.Split('.')[0];
+                            pictureModel.FileName = filename;
+                            pictureModel.Page = ResizeBitmap(bitmap).Result;
+                            pictureModel.PageImage = BitmapToImageSource(pictureModel.Page).Result;
+                            pages.Add(pictureModel);
+                        }
 
-                    RechnungsModel rechnung = new RechnungsModel();
-                    rechnung.Pages = pages;
-                    rechnung.Name = pages.First().FileName;
-                    rechnung.PageCount = pages.Count;
-                    var found = CutOutBitmaps(rechnung, selectedProfile, false).Result;
-                    if (found != -1)
-                    {
-                        sorted++;
+                        RechnungsModel rechnung = new RechnungsModel();
+                        rechnung.Pages = pages;
+                        rechnung.Name = pages.First().FileName;
+                        rechnung.PageCount = pages.Count;
+                        var found = CutOutBitmaps(rechnung, selectedProfile, false).Result;
+                        if (found != -1)
+                        {
+                            sorted++;
+                        }
+                        DisposeBitMaps(bitmaps);
+                        DisposeBitMaps(rechnung);
                     }
-                    DisposeBitMaps(bitmaps);
-                    DisposeBitMaps(rechnung);
+                    else
+                    {
+                        pdf.Dispose();
+                    }
+                    
                 }
                 else
                 {
@@ -665,6 +730,45 @@ namespace SturmProjekt.BL
             bitmapforlogo.Dispose();
             DisposeBitMaps(cutOutBitmaps);
         }
+
+         private void AddtoExcelFile(List<Tuple<string, int>> values)
+       {
+           List<string> buchstaben = new List<string>()
+           {
+               "A","B","C","D","E","F","G",
+           };
+           Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
+           try
+           {
+               Microsoft.Office.Interop.Excel.Workbook sheet = excel.Workbooks.Open(DataPath + "\\RechnungsInfos.xlsx");
+               Microsoft.Office.Interop.Excel.Worksheet x = excel.ActiveSheet as Microsoft.Office.Interop.Excel.Worksheet;
+               Microsoft.Office.Interop.Excel.Range range = x.UsedRange;
+               var xlRange = (Microsoft.Office.Interop.Excel.Range)x.Cells[x.Rows.Count, 1];
+               long lastRow = (long)xlRange.get_End(Microsoft.Office.Interop.Excel.XlDirection.xlUp).Row;
+               long newRow = lastRow + 1;
+               int idx = 0;
+               foreach(var value in values)
+               {
+                   if (value.Item2 == idx)
+                   {
+                       x.Range[buchstaben[idx] + newRow].Value = value.Item1;
+                   }
+                   else
+                   {
+                       x.Range[buchstaben[idx] + newRow].Value = "";
+                   }
+                   
+                   idx++;
+               }
+               sheet.Close(true);
+               excel.Quit();
+           }
+           catch
+           {
+               string failed = "Could not find or open File";
+           }
+
+       } 
 
     }
 
