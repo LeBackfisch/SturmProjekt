@@ -291,8 +291,8 @@ namespace SturmProjekt.BL
                 var category = GetChosenCategory(directories, logoindex);
                 var values = _rechnungsLogic.GetOcrInfo(cutOutBitmaps, TessDataPath);
                 var infos = ApplyKeywords(values, profile).Result;
-                //SaveToCsv(values);
-                AddtoExcelFile(infos);
+                SaveToCsv(infos);
+                //AddtoExcelFile(infos);
                 await SaveRechnungAsPDF(rechnung, category);
             }
             else
@@ -421,6 +421,38 @@ namespace SturmProjekt.BL
             }
         }
 
+        public void SaveToCsv(List<Tuple<string, int>> infos)
+        {
+            var filepath = @"..\..\Database\RechnungsInfos.csv";
+
+            if (File.Exists(filepath))
+            {
+                var line = AddtoCsv(infos);
+                File.AppendAllText(filepath, line);
+            }
+            else
+            {
+                CreateCsv(filepath);
+                var line = AddtoCsv(infos);
+                File.AppendAllText(filepath, line);
+            }
+        }
+
+        public string AddtoCsv(List<Tuple<string, int>> values)
+        {
+            var csv = new StringBuilder();
+
+            foreach (var value in values)
+            {
+                csv.Append(value.Item1);
+                csv.Append(",");
+            }
+
+            csv.Length--;
+
+            return csv.ToString();
+        }
+
         public void SaveToCsv(List<string> values)
         {
             var filepath = @"..\..\Database\RechnungsInfos.csv";
@@ -458,7 +490,7 @@ namespace SturmProjekt.BL
             using (StreamWriter writer = new StreamWriter(new FileStream(filepath,
                 FileMode.Create, FileAccess.Write)))
             {
-                writer.WriteLine("Vertragspartnerinfos, Anlagenadresse, Zeitraum, Gaskosten, Stromkosten, Gasdetailinfos, Stromdetailinfos");
+                writer.WriteLine("Vertragspartnerinfos, Anlagenadresse, Zeitraum, Gaskosten, Stromkosten, Zählpunkt");
             }
         }
 
