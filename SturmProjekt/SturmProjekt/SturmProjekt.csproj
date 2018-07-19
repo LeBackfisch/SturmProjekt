@@ -92,6 +92,7 @@
     </ApplicationDefinition>
     <Compile Include="BL\BusinessLayer.cs" />
     <Compile Include="BL\Config.cs" />
+    <Compile Include="BL\ProfileLogic.cs" />
     <Compile Include="BL\RechnungsLogic.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Events\AddedPageEvent.cs" />
@@ -99,10 +100,14 @@
     <Compile Include="Events\CreateRechnungEvent.cs" />
     <Compile Include="Events\DeletedPageEvent.cs" />
     <Compile Include="Events\DrawOnRechnungEvent.cs" />
+    <Compile Include="Events\MoveProfilePageEvent.cs" />
     <Compile Include="Events\PageListEvent.cs" />
+    <Compile Include="Events\ProfileCurrentPageEvent.cs" />
+    <Compile Include="Events\ProfilePageCountEvent.cs" />
     <Compile Include="Events\RechnungsPageEvent.cs" />
     <Compile Include="Events\RemovePictureEvent.cs" />
     <Compile Include="Events\SelectedPageEvent.cs" />
+    <Compile Include="Events\ToDrawLinesEvent.cs" />
     <Compile Include="Models\LinesModel.cs" />
     <Compile Include="Models\PictureModel.cs" />
     <Compile Include="Models\ProfilePages.cs" />
@@ -110,6 +115,9 @@
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\NavigateProfileViewModel.cs" />
     <Compile Include="ViewModels\PageListViewModel.cs" />
+    <Compile Include="ViewModels\ProfileControlViewModel.cs" />
+    <Compile Include="ViewModels\ProfileEditViewModel.cs" />
+    <Compile Include="ViewModels\ProfilePageEditViewModel.cs" />
     <Compile Include="ViewModels\ProfileViewModel.cs" />
     <Compile Include="Views\AddRechnungView.xaml.cs">
       <DependentUpon>AddRechnungView.xaml</DependentUpon>
@@ -125,6 +133,15 @@
     </Compile>
     <Compile Include="Views\PageListView.xaml.cs">
       <DependentUpon>PageListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProfileControlView.xaml.cs">
+      <DependentUpon>ProfileControlView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProfileEditView.xaml.cs">
+      <DependentUpon>ProfileEditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProfilePageEditView.xaml.cs">
+      <DependentUpon>ProfilePageEditView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ProfileView.xaml.cs">
       <DependentUpon>ProfileView.xaml</DependentUpon>
@@ -160,6 +177,15 @@
     <Page Include="Views\PageListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ProfileControlView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </Page>
+    <Page Include="Views\ProfileEditView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </Page>
+    <Page Include="Views\ProfilePageEditView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </Page>
     <Page Include="Views\ProfileView.xaml">
       <SubType>Designer</SubType>

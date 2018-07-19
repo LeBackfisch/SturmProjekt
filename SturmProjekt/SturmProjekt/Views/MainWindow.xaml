@@ -44,6 +44,23 @@
             <TabItem Header="Fertigstellen">
                 <views:ConfirmView></views:ConfirmView>
             </TabItem>
+            <TabItem Header="Profile">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="2*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*"></ColumnDefinition>
+                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <views:ProfileEditView Grid.Row="0" Grid.Column="1"></views:ProfileEditView>
+                    <views:ProfilePageEditView Grid.Row="1" Grid.Column="1"></views:ProfilePageEditView>
+                    <views:ProfileControlView Grid.Row="2" Grid.Column="1"></views:ProfileControlView>
+                </Grid>
+                
+            </TabItem>
         </TabControl>
 
     </Grid>

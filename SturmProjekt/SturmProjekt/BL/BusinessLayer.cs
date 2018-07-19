@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Media.Imaging;
 using Newtonsoft.Json;
 using Spire.Pdf;
@@ -136,8 +137,10 @@ namespace SturmProjekt.BL
 
             foreach (var pictureItem in Rechnung.Pages)
             {
-                PictureModel pictureModel = new PictureModel();
-                pictureModel.FileName = pictureItem.FileName;
+                PictureModel pictureModel = new PictureModel
+                {
+                    FileName = pictureItem.FileName
+                };
                 var bitmap = DrawonBitmap(pictureItem.Page, pages.ElementAt(index));
                 pictureModel.Page = bitmap;
                 pictureModel.PageImage = BitmapToImageSource(bitmap);
@@ -156,7 +159,7 @@ namespace SturmProjekt.BL
         {
             Graphics g = Graphics.FromImage(bitmap);
 
-            List<LinesModel> lines = profilePage.DrawLines;
+            List<LinesModel> lines = new List<LinesModel>(profilePage.DrawLines);
 
             foreach (var line in lines)
             {
@@ -170,6 +173,18 @@ namespace SturmProjekt.BL
             g.Flush();
 
             return bitmap;
+        }
+
+        public void SaveProfile(ProfileModel profileModel)
+        {
+            if (string.IsNullOrWhiteSpace(profileModel.FilePath))
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append(FilePath);
+                sb.Append(profileModel.Name);
+                profileModel.FilePath = sb.ToString();
+            }
+           
         }
 
 
