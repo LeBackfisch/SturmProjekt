@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Media.Imaging;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Spire.Pdf;
 using SturmProjekt.Models;
 using Brushes = System.Drawing.Brushes;
@@ -175,6 +176,42 @@ namespace SturmProjekt.BL
             return bitmap;
         }
 
+        public Bitmap DrawonBitmap(Bitmap bitmap, List<LinesModel> lineModels)
+        {
+            Graphics g = Graphics.FromImage(bitmap);
+
+            SolidBrush whiteBrush = new SolidBrush(Color.White);
+            Rectangle rect = new Rectangle(0, 0, 2480, 3508);
+            g.FillRectangle(whiteBrush, rect);
+
+            foreach (var lineModel in lineModels)
+            {
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                
+                Pen redPen = new Pen((Brushes.Red), 3);
+                g.DrawRectangle(redPen,
+                    new Rectangle(lineModel.X, lineModel.Y, lineModel.Width, lineModel.Height));
+            }
+            g.Flush();
+        
+            return bitmap;
+        }
+
+        public Bitmap GetClearBitmap(Bitmap bitmap)
+        {
+            Graphics g = Graphics.FromImage(bitmap);
+
+            SolidBrush whiteBrush = new SolidBrush(Color.White);
+            Rectangle rect = new Rectangle(0, 0, 2480, 3508);
+            g.FillRectangle(whiteBrush, rect);
+
+            g.Flush();
+
+            return bitmap;
+        }
+
         public void SaveProfile(ProfileModel profileModel)
         {
             if (string.IsNullOrWhiteSpace(profileModel.FilePath))
@@ -182,9 +219,24 @@ namespace SturmProjekt.BL
                 StringBuilder sb = new StringBuilder();
                 sb.Append(FilePath);
                 sb.Append(profileModel.Name);
+                sb.Append(".json");
                 profileModel.FilePath = sb.ToString();
             }
-           
+            var content = JsonConvert.SerializeObject(profileModel);
+            content = RemoveFilePath(content);
+
+            using (StreamWriter writer = new StreamWriter(profileModel.FilePath, false))
+            {
+                writer.Write(content);
+            }
+
+        }
+
+        private string RemoveFilePath(string XMLString)
+        {
+            JObject o = JObject.Parse(XMLString);
+            o.Property("FilePath").Remove();
+            return o.ToString();
         }
 
 

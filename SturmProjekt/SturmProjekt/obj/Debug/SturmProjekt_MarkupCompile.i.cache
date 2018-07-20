@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\sebastian.slowak\Documents\test\SturmProjekt\SturmProjekt\SturmProjekt\App.xaml
-10581101513
+11-816317645
 
-49732809359
+551993178375
 79-767905440
-Views\AddRechnungView.xaml;Views\ChooseProfileView.xaml;Views\ConfirmView.xaml;Views\MainWindow.xaml;Views\NavigateProfileView.xaml;Views\PageListView.xaml;Views\ProfileControlView.xaml;Views\ProfileEditView.xaml;Views\ProfilePageEditView.xaml;Views\ProfileView.xaml;
+Views\AddRechnungView.xaml;Views\ChooseProfileView.xaml;Views\ConfirmView.xaml;Views\MainWindow.xaml;Views\NavigateProfileView.xaml;Views\PageListView.xaml;Views\ProfileControlView.xaml;Views\ProfileEditView.xaml;Views\ProfileImageView.xaml;Views\ProfilePageEditView.xaml;Views\ProfileView.xaml;
 
-False
+True
 

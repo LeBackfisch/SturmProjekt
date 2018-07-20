@@ -156,3 +156,5 @@ C:\Users\sebastian.slowak\Documents\test\SturmProjekt\SturmProjekt\SturmProjekt\
 C:\Users\sebastian.slowak\Documents\test\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\ProfilePageEditView.baml
 C:\Users\sebastian.slowak\Documents\test\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\ProfileControlView.g.cs
 C:\Users\sebastian.slowak\Documents\test\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\ProfileControlView.baml
+C:\Users\sebastian.slowak\Documents\test\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\ProfileImageView.g.cs
+C:\Users\sebastian.slowak\Documents\test\SturmProjekt\SturmProjekt\SturmProjekt\obj\Debug\Views\ProfileImageView.baml

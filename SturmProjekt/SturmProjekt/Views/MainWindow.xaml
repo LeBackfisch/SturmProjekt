@@ -53,11 +53,12 @@
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="4*"></ColumnDefinition>
-                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                        <ColumnDefinition Width="3*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <views:ProfileEditView Grid.Row="0" Grid.Column="1"></views:ProfileEditView>
                     <views:ProfilePageEditView Grid.Row="1" Grid.Column="1"></views:ProfilePageEditView>
                     <views:ProfileControlView Grid.Row="2" Grid.Column="1"></views:ProfileControlView>
+                    <views:ProfileImageView Grid.Column="0"></views:ProfileImageView>
                 </Grid>
                 
             </TabItem>

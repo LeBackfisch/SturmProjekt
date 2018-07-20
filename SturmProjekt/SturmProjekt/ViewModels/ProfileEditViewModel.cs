@@ -19,12 +19,10 @@ namespace SturmProjekt.ViewModels
         private readonly IEventAggregator _eventAggregator;
         private ObservableCollection<ProfileModel> profileModel;
         private ObservableCollection<ProfilePages> _pages;
-        private ObservableCollection<LinesModel> _lines;
         private string _name;
         private string _filePath;
         private int _pageCount;
         private int _currentPage;
-        private List<ProfilePages> _profilePages;
         private ObservableCollection<LinesModel> _drawLines;
 
         public ProfileEditViewModel(BusinessLayer bl, IEventAggregator eventAggregator)
@@ -33,19 +31,14 @@ namespace SturmProjekt.ViewModels
             _eventAggregator = eventAggregator;
             profileModel = new ObservableCollection<ProfileModel>();
             _pages = new ObservableCollection<ProfilePages>();
-            _lines = new ObservableCollection<LinesModel>();
             NewProfileCommand = new DelegateCommand(NewProfile, CanNewProfile);
             OpenProfileCommand = new DelegateCommand(OpenProfile, CanOpenProfile);
-            AddPageCommand = new DelegateCommand(AddPage, CanAddPage).ObservesProperty(() => ProfileModel);
-            RemovePageCommand = new DelegateCommand(RemovePage, CanRemovePage).ObservesProperty(() => ProfileModel);
-            AddLineCommand = new DelegateCommand(AddLine, CanAddLine).ObservesProperty(() => ProfileModel);
-            RemoveLinesCommand = new DelegateCommand(RemoveLines, CanRemoveLines).ObservesProperty(() => DrawLines);
             _eventAggregator.GetEvent<MoveProfilePageEvent>().Subscribe(move => 
             {
                 CurrentPage = CurrentPage + move;
-                if(ProfilePages.Count > CurrentPage)
+                if(Pages.Count > CurrentPage)
                 {
-                    DrawLines = ProfilePages.ElementAt(CurrentPage).DrawLines;
+                    DrawLines = Pages.ElementAt(CurrentPage).DrawLines;
                 }
                 else
                 {
@@ -55,12 +48,52 @@ namespace SturmProjekt.ViewModels
                 _eventAggregator.GetEvent<ProfileCurrentPageEvent>().Publish(CurrentPage);
 
             });
+            _eventAggregator.GetEvent<FromDrawLinesEvent>().Subscribe(tuple => 
+            {
+                var page = CurrentPage + tuple.Item2;
+                var lines = tuple.Item1;
+                if(Pages.Count > CurrentPage)
+                {
+                    Pages.ElementAt(CurrentPage).DrawLines = lines;
+                }
+                else
+                {
+                    var profilePage = new ProfilePages();
+                    profilePage.DrawLines = lines;
+                    Pages.Add(profilePage);
+                }
+            });
+            _eventAggregator.GetEvent<SaveProfileEvent>().Subscribe(() => 
+            {               
+                SaveProfile();
+                Name = string.Empty;
+                FilePath = string.Empty;
+                PageCount = 0;
+                CurrentPage = 0;
+                while (DrawLines.Count > 0)
+                {
+                    DrawLines.RemoveAt(DrawLines.Count - 1);
+                }
+            });
+        }
+
+        private void RemoveAdditionalPages()
+        {
+            while(Pages.Count > PageCount)
+            {
+                Pages.RemoveAt(Pages.Count - 1);               
+            }
+            CurrentPage = Pages.Count - 1;
+            _eventAggregator.GetEvent<ProfileCurrentPageEvent>().Publish(CurrentPage);
         }
 
         public string Name
         {
             get => _name;
-            set => SetProperty(ref _name,value);
+            set {
+                    SetProperty(ref _name, value);
+                    _eventAggregator.GetEvent<ProfileFileNameEvent>().Publish(_name);
+                }
         }
         public string FilePath
         {
@@ -72,6 +105,7 @@ namespace SturmProjekt.ViewModels
             get => _pageCount;
             set {
                 SetProperty(ref _pageCount, value);
+                RemoveAdditionalPages();
                 _eventAggregator.GetEvent<ProfilePageCountEvent>().Publish(_pageCount);
             }
         }
@@ -80,12 +114,6 @@ namespace SturmProjekt.ViewModels
         {
             get => _currentPage;
             set => SetProperty(ref _currentPage, value);
-        }
-
-        public List<ProfilePages> ProfilePages
-        {
-            get => _profilePages;
-            set => SetProperty(ref _profilePages, value);
         }
 
         public ObservableCollection<LinesModel> DrawLines
@@ -105,54 +133,6 @@ namespace SturmProjekt.ViewModels
             set => SetProperty(ref _pages, value);
         }
 
-        public ObservableCollection<LinesModel> Lines
-        {
-            get => _lines;
-            set => SetProperty(ref _lines, value);
-        }
-
-        private bool CanRemovePage()
-        {
-            return ProfileModel != null && ProfileModel.FirstOrDefault().Pages.Count > 0;
-        }
-
-        private bool CanRemoveLines()
-        {
-            return true;
-        }
-
-        private void RemoveLines()
-        {
-
-        }
-        private void RemovePage()
-        {
-            ProfileModel.FirstOrDefault().Pages.RemoveAt(ProfileModel.FirstOrDefault().Pages.Count - 1);
-        }
-        
-        private bool CanAddLine()
-        {
-            return ProfileModel != null && ProfileModel.FirstOrDefault().Pages.Count < ProfileModel.FirstOrDefault().PageCount;
-        }
-
-        private void AddLine()
-        {
-            var model = new LinesModel();
-            DrawLines.Add(model);
-        }
-
-        private bool CanAddPage()
-        {
-            return ProfileModel != null && ProfileModel.FirstOrDefault().Pages.Count < ProfileModel.FirstOrDefault().PageCount;
-        }
-
-        private void AddPage()
-        {
-            var page = new ProfilePages();
-            ProfileModel.FirstOrDefault().Pages.Add(page);
-            Pages.Add(page);
-        }
-
         private bool CanNewProfile()
         {
             return true;
@@ -166,6 +146,14 @@ namespace SturmProjekt.ViewModels
                 this.ProfileModel.RemoveAt(0);
             }          
             Pages.Add(new ProfilePages());
+            ProfileModel.Add(new ProfileModel());
+            ProfileModel.FirstOrDefault().Pages = new List<ProfilePages>();
+            DrawLines = new ObservableCollection<LinesModel>();
+            PageCount = 1;
+            CurrentPage = 0;
+            _eventAggregator.GetEvent<ToDrawLinesEvent>().Publish(DrawLines);
+            _eventAggregator.GetEvent<ProfilePageCountEvent>().Publish(PageCount);
+            _eventAggregator.GetEvent<ProfileCurrentPageEvent>().Publish(CurrentPage);
         }
 
         private bool CanOpenProfile()
@@ -202,27 +190,18 @@ namespace SturmProjekt.ViewModels
                     Name = profile.Name;
                     PageCount = profile.PageCount;
                     FilePath = profile.FilePath;
-                    ProfilePages = profile.Pages;
-                    DrawLines = ProfilePages.FirstOrDefault().DrawLines;
+                    Pages.AddRange(profile.Pages);
+                    DrawLines = Pages.FirstOrDefault().DrawLines;
                     CurrentPage = 0;
                     _eventAggregator.GetEvent<ToDrawLinesEvent>().Publish(DrawLines);
                     _eventAggregator.GetEvent<ProfilePageCountEvent>().Publish(PageCount);
                     _eventAggregator.GetEvent<ProfileCurrentPageEvent>().Publish(CurrentPage);
                 }
-                Pages.AddRange(ProfileModel.FirstOrDefault().Pages);
             }
         }
 
         public ICommand NewProfileCommand { get; set; }
         public ICommand OpenProfileCommand { get; set; }
-        public ICommand AddPageCommand { get; set; }
-        public ICommand AddLineCommand { get; set; }
-        public ICommand RemovePageCommand { get; set; }
-        public ICommand RemoveLinesCommand { get; set; }
-
        
-
-       
-    
     }
 }

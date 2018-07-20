@@ -100,12 +100,16 @@
     <Compile Include="Events\CreateRechnungEvent.cs" />
     <Compile Include="Events\DeletedPageEvent.cs" />
     <Compile Include="Events\DrawOnRechnungEvent.cs" />
+    <Compile Include="Events\FromDrawLinesEvent.cs" />
     <Compile Include="Events\MoveProfilePageEvent.cs" />
     <Compile Include="Events\PageListEvent.cs" />
     <Compile Include="Events\ProfileCurrentPageEvent.cs" />
+    <Compile Include="Events\ProfileDrawLinesEvent.cs" />
+    <Compile Include="Events\ProfileFileNameEvent.cs" />
     <Compile Include="Events\ProfilePageCountEvent.cs" />
     <Compile Include="Events\RechnungsPageEvent.cs" />
     <Compile Include="Events\RemovePictureEvent.cs" />
+    <Compile Include="Events\SaveProfileEvent.cs" />
     <Compile Include="Events\SelectedPageEvent.cs" />
     <Compile Include="Events\ToDrawLinesEvent.cs" />
     <Compile Include="Models\LinesModel.cs" />
@@ -117,6 +121,7 @@
     <Compile Include="ViewModels\PageListViewModel.cs" />
     <Compile Include="ViewModels\ProfileControlViewModel.cs" />
     <Compile Include="ViewModels\ProfileEditViewModel.cs" />
+    <Compile Include="ViewModels\ProfileImageViewModel.cs" />
     <Compile Include="ViewModels\ProfilePageEditViewModel.cs" />
     <Compile Include="ViewModels\ProfileViewModel.cs" />
     <Compile Include="Views\AddRechnungView.xaml.cs">
@@ -139,6 +144,9 @@
     </Compile>
     <Compile Include="Views\ProfileEditView.xaml.cs">
       <DependentUpon>ProfileEditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProfileImageView.xaml.cs">
+      <DependentUpon>ProfileImageView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ProfilePageEditView.xaml.cs">
       <DependentUpon>ProfilePageEditView.xaml</DependentUpon>
@@ -182,6 +190,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </Page>
     <Page Include="Views\ProfileEditView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </Page>
+    <Page Include="Views\ProfileImageView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </Page>
     <Page Include="Views\ProfilePageEditView.xaml">

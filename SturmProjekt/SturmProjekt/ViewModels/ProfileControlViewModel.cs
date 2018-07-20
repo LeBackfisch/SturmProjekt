@@ -14,13 +14,15 @@ namespace SturmProjekt.ViewModels
     public class ProfileControlViewModel: BindableBase
     {
         private readonly IEventAggregator _eventAggregator;
-        private int _currentPage;
+        private int _currentPage = -1;
         private int _pageCount;
+        private string _fileName;
         public ProfileControlViewModel(IEventAggregator eventAggregator)
         {
             _eventAggregator = eventAggregator;
             LeftCommand = new DelegateCommand(Left, CanLeft).ObservesProperty(() => CurrentPage);
             RightCommand = new DelegateCommand(Right, CanRight).ObservesProperty(() => CurrentPage).ObservesProperty(() => PageCount);
+            SaveCommand = new DelegateCommand(Save, CanSave).ObservesProperty(() => CurrentPage).ObservesProperty(() => FileName);
             _eventAggregator.GetEvent<ProfileCurrentPageEvent>().Subscribe(currentPage =>
             {
                 CurrentPage = currentPage;
@@ -29,12 +31,22 @@ namespace SturmProjekt.ViewModels
             {
                 PageCount = pageCount;
             });
+            _eventAggregator.GetEvent<ProfileFileNameEvent>().Subscribe(name => 
+            {
+                FileName = name;
+            });
         }
 
         public int PageCount
         {
             get => _pageCount;
             set => SetProperty(ref _pageCount, value);
+        }
+
+        public string FileName
+        {
+            get => _fileName;
+            set => SetProperty(ref _fileName, value);
         }
 
         public int CurrentPage
@@ -58,6 +70,19 @@ namespace SturmProjekt.ViewModels
         private void Right()
         {
             _eventAggregator.GetEvent<MoveProfilePageEvent>().Publish(1);
+        }
+
+        private bool CanSave()
+        {
+            return CurrentPage != -1 && !string.IsNullOrWhiteSpace(FileName);
+        }
+
+        private void Save()
+        {
+            _eventAggregator.GetEvent<SaveProfileEvent>().Publish();
+            CurrentPage = 0;
+            PageCount = 0;
+            FileName = string.Empty;
         }
 
         public ICommand LeftCommand { get; set; }

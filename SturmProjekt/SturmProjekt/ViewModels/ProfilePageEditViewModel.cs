@@ -24,24 +24,30 @@ namespace SturmProjekt.ViewModels
         {
             _bl = bl;
             _eventAggregator = eventAggregator;
-            AddLinesCommand = new DelegateCommand(AddLines, CanAddLines);
+            AddLinesCommand = new DelegateCommand(AddLines, CanAddLines).ObservesProperty(() => DrawLines);
             RemoveItemCommand = new DelegateCommand<object>(RemoveItem);
             _eventAggregator.GetEvent<ToDrawLinesEvent>().Subscribe(lines =>
             {
                 DrawLines = lines;
             });
+            _eventAggregator.GetEvent<MoveProfilePageEvent>().Subscribe(page =>
+            {
+                var moved = page * -1;
+                var tuple = new Tuple<ObservableCollection<LinesModel>, int>(DrawLines, moved);
+
+                _eventAggregator.GetEvent<FromDrawLinesEvent>().Publish(tuple);
+            });
         }
 
         private bool CanAddLines()
         {
-            return true;
+            return DrawLines != null;
         }
 
         private void AddLines()
         {
             var lines = new LinesModel();
             DrawLines.Add(lines);
-            _eventAggregator.GetEvent<>().Publish();
         }
 
         private void RemoveItem(object obj)
@@ -52,7 +58,11 @@ namespace SturmProjekt.ViewModels
         public ObservableCollection<LinesModel> DrawLines
         {
             get => _drawLines;
-            set => SetProperty(ref _drawLines, value);
+            set
+            {
+                SetProperty(ref _drawLines, value);
+                _eventAggregator.GetEvent<ProfileDrawLinesEvent>().Publish(_drawLines);
+            }
         }
 
         public ICommand AddLinesCommand { get; set; }

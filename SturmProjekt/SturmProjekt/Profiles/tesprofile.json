@@ -1,47 +1,38 @@
 {
-"Name":"TestProfile",
-"PageCount":"3",
-"Pages":[
-			{
-			"DrawLines": 
-				[
-					{
-						"X":50,
-						"Y":50,
-						"Width":300,
-						"Height":300
-						
-					},
-					
-					{
-						"X":250,
-						"Y":350,
-						"Width":200,
-						"Height":200
-					}
-					
-				]	
-			},
-			{
-			"DrawLines": 
-				[
-					{
-						"X":50,
-						"Y":50,
-						"Width":300,
-						"Height":300
-						
-					},
-					
-					{
-						"X":250,
-						"Y":350,
-						"Width":200,
-						"Height":200
-					}
-					
-				]	
-			}
-		]
-
+  "Name": "TestProfile",
+  "PageCount": 3,
+  "Pages": [
+    {
+      "DrawLines": [
+        {
+          "X": 100,
+          "Y": 50,
+          "Width": 300,
+          "Height": 300
+        },
+        {
+          "X": 250,
+          "Y": 350,
+          "Width": 200,
+          "Height": 200
+        }
+      ]
+    },
+    {
+      "DrawLines": [
+        {
+          "X": 50,
+          "Y": 50,
+          "Width": 300,
+          "Height": 300
+        },
+        {
+          "X": 250,
+          "Y": 350,
+          "Width": 200,
+          "Height": 200
+        }
+      ]
+    }
+  ]
 }
